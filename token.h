@@ -1,8 +1,6 @@
 #ifndef TOKEN_INCLUDED
 #define TOKEN_INCLUDED
 
-typedef enum TokenType {TOKEN_NUMBER, TOKEN_WORD};
-
 /* Free token pvItem.  pvExtra is unused. */
 void freeToken(void *pvItem, void *pvExtra);
 
