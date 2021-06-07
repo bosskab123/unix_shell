@@ -60,13 +60,13 @@ void printWordToken(void *pvItem, void *pvExtra)
 
 /*--------------------------------------------------------------------*/
 
-char * getTokenValue(void *pvItem)
+char *getTokenValue(void *pvItem)
 
 /* Return value of the token to caller */
 
 {
 	struct Token *psToken = (struct Token*)pvItem;
-	return pvItem->pcValue;
+	return (char *)pvItem->pcValue;
 }
 
 /*--------------------------------------------------------------------*/
