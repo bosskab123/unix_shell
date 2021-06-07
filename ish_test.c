@@ -32,7 +32,6 @@ int main(void)
 	*/
 	char acLine[MAX_LINE_SIZE];
 	DynArray_T tokens;
-	int iSuccessful;
 	
 	/* 
 		Open ".ishrc" in the home directory 
@@ -52,7 +51,7 @@ int main(void)
 	while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
 	{
 		// Print out the line 
-		printf("% %s\n", acLine);
+		printf("\% %s\n", acLine);
 		
 		// Allocate memory for tokens
 		tokens = DynArray_new(0);
