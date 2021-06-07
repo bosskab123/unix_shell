@@ -80,7 +80,7 @@ int main(void)
 		
 		number_token = DynArray_getLength(tokens);
 		arrTokens = (char **)malloc( number_token * sizeof(char *));
-		DynArray_toArray(tokens, arrTokens);
+		DynArray_toArray(tokens, (void **)arrTokens);
 		
 		printf("The number of token is %d\n", number_token);
 		printf("Tokens are ");
