@@ -64,7 +64,7 @@ int main(void)
 		
 
 		// Tokenize string in acLine into token and save in tokens
-		iSuccessful = lexLine(acLine, oTokens);
+		iSuccessful = lexLine(acLine, tokens);
 		if (iSuccessful)
 		{
 			printf("Words:  ");
