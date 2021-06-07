@@ -23,10 +23,16 @@ int main(void)
    that it contains.  Repeat until EOF.  Return 0 iff successful. */
 
 {
+	
    char acLine[MAX_LINE_SIZE];
    DynArray_T oTokens;
    int iSuccessful;
-
+   
+   /* Open ".ishrc" in the home directory 
+      If .ishrc is not found, the file descriptor is set to stdin*/
+   int fd = open("~/.ishrc",O_RDONLY);
+   if(fd == -1) fd = stdin;
+   
    printf("------------------------------------\n");
    while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
    {
