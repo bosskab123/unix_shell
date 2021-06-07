@@ -32,6 +32,7 @@ int main(void)
 	*/
 	char acLine[MAX_LINE_SIZE];
 	DynArray_T tokens;
+	int iSuccessful;
 	
 	/* 
 		Open ".ishrc" in the home directory 
@@ -63,7 +64,13 @@ int main(void)
 		
 
 		// Tokenize string in acLine into token and save in tokens
-		
+		iSuccessful = lexLine(acLine, oTokens);
+		if (iSuccessful)
+		{
+			printf("Words:  ");
+			DynArray_map(oTokens, printWordToken, NULL);
+			printf("\n");
+		}		
 
 		DynArray_map(tokens, freeToken, NULL);
 		DynArray_free(tokens);
