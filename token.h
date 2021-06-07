@@ -20,4 +20,14 @@ void printWordToken(void *pvItem, void *pvExtra);
 struct Token *makeToken(enum TokenType eTokenType,
    char *pcValue);
 
+/* Lexically analyze string pcLine.  Populate oTokens with the
+   tokens that pcLine contains.  Return 1 (TRUE) if successful, or
+   0 (FALSE) otherwise.  In the latter case, oTokens may contain
+   tokens that were discovered before the error. The caller owns the
+   tokens placed in oTokens. */
+
+/* lexLine() uses a DFA approach.  It "reads" its characters from
+   pcLine. */
+int lexLine(const char *pcLine, DynArray_T oTokens);
+
 #endif
