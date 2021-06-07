@@ -38,7 +38,7 @@ int main(void)
 	strcpy(ishrc_filepath, usr_home);
 	strcat(ishrc_filepath, "/.ishrc");
 	printf("ishrc filepath: %s\n",ishrc_filepath);
-	int fd = open(ishrc_filepath,O_RDONLY);
+	int fd = open(".ishrc",O_RDONLY);
 	if(fd == -1) fd = 0;
 	
 	printf("------------------------------------\n");
