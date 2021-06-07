@@ -27,49 +27,42 @@ int main(void)
 
 {
 	
-   char acLine[MAX_LINE_SIZE];
-   DynArray_T oTokens;
-   int iSuccessful;
-   
-   /* Open ".ishrc" in the home directory 
-      If .ishrc is not found, the file descriptor is set to stdin*/
-   	char cwd[MAX_PATH_SIZE];
-   	if (getcwd(cwd, sizeof(cwd)) != NULL) {
-       	printf("Current working dir: %s\n", cwd);
-   	}
-	else {
-       	perror("getcwd() error");
-       	return 1;
-   	}
-   int fd = open("/mnt/home/20180875/.ishrc",O_RDONLY);
-   if(fd == -1) fd = 0;
-   
-   printf("------------------------------------\n");
-   while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
-   {
-      oTokens = DynArray_new(0);
-      if (oTokens == NULL)
-      {
-         fprintf(stderr, "Cannot allocate memory\n");
-         exit(EXIT_FAILURE);
-      }
+	char acLine[MAX_LINE_SIZE];
+	DynArray_T oTokens;
+	int iSuccessful;
+	/* Open ".ishrc" in the home directory 
+	If .ishrc is not found, the file descriptor is set to stdin*/
+	char usr_home[MAX_PATH_SIZE] = getenv("HOME");
+	printf("usr home: %s\n",usr_home);
+	int fd = open("/mnt/home/20180875/.ishrc",O_RDONLY);
+	if(fd == -1) fd = 0;
+	
+	printf("------------------------------------\n");
+	while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
+	{
+		oTokens = DynArray_new(0);
+		if (oTokens == NULL)
+		{
+			fprintf(stderr, "Cannot allocate memory\n");
+			exit(EXIT_FAILURE);
+		}
 
-      iSuccessful = lexLine(acLine, oTokens);
-      if (iSuccessful)
-      {
-          printf("Numbers:  ");
-          DynArray_map(oTokens, printNumberToken, NULL);
-          printf("\n");
+		iSuccessful = lexLine(acLine, oTokens);
+		if (iSuccessful)
+		{
+			printf("Numbers:  ");
+			DynArray_map(oTokens, printNumberToken, NULL);
+			printf("\n");
 
-          printf("Words:  ");
-          DynArray_map(oTokens, printWordToken, NULL);
-          printf("\n");
-      }
-      printf("------------------------------------\n");
+			printf("Words:  ");
+        	DynArray_map(oTokens, printWordToken, NULL);
+        	printf("\n");
+		}
+    	printf("------------------------------------\n");
 
-      DynArray_map(oTokens, freeToken, NULL);
-      DynArray_free(oTokens);
-   }
+		DynArray_map(oTokens, freeToken, NULL);
+		DynArray_free(oTokens);
+	}
 
-   return 0;
+	return 0;
 }
