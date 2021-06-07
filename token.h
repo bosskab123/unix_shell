@@ -14,6 +14,9 @@ void printNumberToken(void *pvItem, void *pvExtra);
    unused. */
 void printWordToken(void *pvItem, void *pvExtra);
 
+/* Return value of the token to caller */
+char * getTokenValue(void *pvItem);
+
 /* Create and return a Token whose type is eTokenType and whose
    value consists of string pcValue.  Return NULL if insufficient
    memory is available.  The caller owns the Token. */
