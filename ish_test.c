@@ -5,6 +5,8 @@
 /* automaton (DFA)                                                    */
 /*--------------------------------------------------------------------*/
 
+#define _BSD_SOURCE
+#define _GNU_SOURCE
 #include "dynarray.h"
 #include "token.h"
 #include <ctype.h>
@@ -21,6 +23,7 @@
 #define MAX_LINE_SIZE 1024
 #define MAX_PATH_SIZE 1024
 
+
 int main(void)
 
 /* Read a line from stdin, and write to stdout each number and word
@@ -34,8 +37,9 @@ int main(void)
 		cwd: current working directory
 	*/
 	char acLine[MAX_LINE_SIZE];
+	char command[MAX_LINE_SIZE];
 	DynArray_T tokens;
-	int iSuccessful, iBuiltIn=1;
+	int iSuccessful, iBuiltIn=1, number_token;
 	
 	/* 
 		Open ".ishrc" in the home directory 
@@ -73,7 +77,8 @@ int main(void)
 			There are 5 built-in commands: setenv, unsetenv, cd, exit, fg
 			We check if the first token is one of the built-in command.
 		*/
-		char command[MAX_LINE_SIZE] = DynArray_get(tokens,0);
+		
+		strcpy(command,DynArray_get(tokens,0));
 		number_token = DynArray_getLength(tokens);
 		
 		/* setenv var [value]: set variable var to value. If value is omitted, set to empyty string. */
