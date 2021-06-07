@@ -38,11 +38,11 @@ int main(void)
 	strcpy(ishrc_filepath, usr_home);
 	strcat(ishrc_filepath, "/.ishrc");
 	printf("ishrc filepath: %s\n",ishrc_filepath);
-	int fd = open(ishrc_filepath,O_RDONLY);
+	int fd = fopen(ishrc_filepath,O_RDONLY);
 	if(fd == -1) fd = 0;
 	
 	printf("------------------------------------\n");
-	while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
+	while (fgets(acLine, MAX_LINE_SIZE, (FILE *)fd) != NULL)
 	{
 		oTokens = DynArray_new(0);
 		if (oTokens == NULL)
