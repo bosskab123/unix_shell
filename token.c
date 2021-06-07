@@ -200,6 +200,10 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 					acValue[iValueIndex++] = c;
 					eState = STATE_IN_WORD;
 				}
+				else if (c == '"')
+				{
+					eState = STATE_IN_STRING;
+				}
 				else if ((c == ' ') || (c == '\t'))
 				{
 					/* Create a WORD token. */
