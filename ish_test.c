@@ -67,6 +67,7 @@ int main(void)
 		DynArray_map(oTokens, freeToken, NULL);
 		DynArray_free(oTokens);
 	}
+	close(fd);
 
 	return 0;
 }
