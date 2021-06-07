@@ -66,7 +66,7 @@ char *getTokenValue(void *pvItem)
 
 {
 	struct Token *psToken = (struct Token*)pvItem;
-	return (char *)(pvItem->pcValue);
+	return psToken->pcValue;
 }
 
 /*--------------------------------------------------------------------*/
