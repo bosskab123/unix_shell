@@ -42,7 +42,7 @@ int main(void)
 	if(fd == -1) fd = 0;
 	
 	printf("------------------------------------\n");
-	while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
+	while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
 	{
 		oTokens = DynArray_new(0);
 		if (oTokens == NULL)
