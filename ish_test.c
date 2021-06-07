@@ -38,7 +38,7 @@ int main(void)
 	strcpy(ishrc_filepath, usr_home);
 	strcat(ishrc_filepath, "/.ishrc");
 	printf("ishrc filepath: %s\n",ishrc_filepath);
-	FILE* fd = fopen(ishrc_filepath,O_RDONLY);
+	FILE* fd = fopen("~/.ishrc",O_RDONLY);
 	if(fd == NULL) printf("Not found");
 	
 	printf("------------------------------------\n");
