@@ -39,7 +39,7 @@ int main(void)
 	strcat(ishrc_filepath, "/.ishrc");
 	printf("ishrc filepath: %s\n",ishrc_filepath);
 	FILE* fd = fopen(ishrc_filepath,O_RDONLY);
-	if(fd == NULL) fd = stdin;
+	if(fd == NULL) printf("Not found");
 	
 	printf("------------------------------------\n");
 	while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
