@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <env.h>
 #include <assert.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -35,7 +36,6 @@ int main(void)
 	*/
 	char acLine[MAX_LINE_SIZE];
 	DynArray_T tokens;
-	char vars[]
 	int iSuccessful, iBuiltIn=1;
 	
 	/* 
@@ -74,7 +74,7 @@ int main(void)
 			There are 5 built-in commands: setenv, unsetenv, cd, exit, fg
 			We check if the first token is one of the built-in command.
 		*/
-		command = DynArray_get(tokens,0);
+		char command[MAX_LINE_SIZE] = DynArray_get(tokens,0);
 		number_token = DynArray_getLength(tokens);
 		
 		/* setenv var [value]: set variable var to value. If value is omitted, set to empyty string. */
