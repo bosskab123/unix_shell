@@ -35,7 +35,7 @@ struct Token
 
 /*--------------------------------------------------------------------*/
 
-static void freeToken(void *pvItem, void *pvExtra)
+void freeToken(void *pvItem, void *pvExtra)
 
 /* Free token pvItem.  pvExtra is unused. */
 
@@ -47,7 +47,7 @@ static void freeToken(void *pvItem, void *pvExtra)
 
 /*--------------------------------------------------------------------*/
 
-static void printNumberToken(void *pvItem, void *pvExtra)
+void printNumberToken(void *pvItem, void *pvExtra)
 
 /* Print token pvItem to stdout iff it is a number.  pvExtra is
    unused. */
@@ -60,7 +60,7 @@ static void printNumberToken(void *pvItem, void *pvExtra)
 
 /*--------------------------------------------------------------------*/
 
-static void printWordToken(void *pvItem, void *pvExtra)
+void printWordToken(void *pvItem, void *pvExtra)
 
 /* Print token pvItem to stdout iff it is a word.  pvExtra is
    unused. */
@@ -73,7 +73,7 @@ static void printWordToken(void *pvItem, void *pvExtra)
 
 /*--------------------------------------------------------------------*/
 
-static struct Token *makeToken(enum TokenType eTokenType,
+struct Token *makeToken(enum TokenType eTokenType,
    char *pcValue)
 
 /* Create and return a Token whose type is eTokenType and whose
@@ -103,7 +103,7 @@ static struct Token *makeToken(enum TokenType eTokenType,
 
 /*--------------------------------------------------------------------*/
 
-static int lexLine(const char *pcLine, DynArray_T oTokens)
+int lexLine(const char *pcLine, DynArray_T oTokens)
 
 /* Lexically analyze string pcLine.  Populate oTokens with the
    tokens that pcLine contains.  Return 1 (TRUE) if successful, or

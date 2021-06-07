@@ -1,7 +1,6 @@
 #ifndef TOKEN_INCLUDED
 #define TOKEN_INCLUDED
 
-struct Token;
 typedef enum TokenType {TOKEN_NUMBER, TOKEN_WORD};
 
 /* Free token pvItem.  pvExtra is unused. */
