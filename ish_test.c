@@ -82,6 +82,7 @@ int main(void)
 		number_token = DynArray_getLength(tokens);
 		
 		printf("The command is %s\n",(char *)DynArray_get(tokens,0));
+		printf("The number of token is %d\n", number_token);
 		
 		/* setenv var [value]: set variable var to value. If value is omitted, set to empyty string. */
 		if (strcmp(command, "setenv") == 0)
