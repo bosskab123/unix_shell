@@ -143,7 +143,7 @@ int main(void)
 		 When there are multiple programs running in the background, it will bring the most recently launched program to the foreground. */
 		else if (strcmp(command, "fg") == 0)
 		{
-			printf("Bring background to foreground pls");
+			printf("Bring background to foreground pls\n");
 		}
 		else iBuiltIn = 0;
 		
