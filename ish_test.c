@@ -15,9 +15,7 @@
 
 /*--------------------------------------------------------------------*/
 
-enum {MAX_LINE_SIZE = 1024};
-
-enum {FALSE, TRUE};
+#define MAX_LINE_SIZE 1024
 
 int main(void)
 
