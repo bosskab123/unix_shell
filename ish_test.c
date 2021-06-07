@@ -34,8 +34,11 @@ int main(void)
 	If .ishrc is not found, the file descriptor is set to stdin*/
 	char *usr_home = (char *)malloc(MAX_PATH_SIZE * sizeof(char));
 	strcpy(usr_home,getenv("HOME"));
-	printf("usr home: %s\n",usr_home);
-	int fd = open("/mnt/home/20180875/.ishrc",O_RDONLY);
+	char *ishrc_filepath = (char *)malloc(MAX_PATH_SIZE * sizeof(char));
+	strcpy(ishrc_filepath, usr_home);
+	strcat(ishrc_filepath, "/.ishrc");
+	printf("ishrc filepath: %s\n",ishrc_filepath);
+	int fd = open(ishrc_filepath,O_RDONLY);
 	if(fd == -1) fd = 0;
 	
 	printf("------------------------------------\n");
