@@ -32,13 +32,12 @@ int main(void)
 	int iSuccessful;
 	/* Open ".ishrc" in the home directory 
 	If .ishrc is not found, the file descriptor is set to stdin*/
-	char *usr_home = (char *)malloc(MAX_PATH_SIZE * sizeof(char));
-	strcpy(usr_home,getenv("HOME"));
 	char *ishrc_filepath = (char *)malloc(MAX_PATH_SIZE * sizeof(char));
-	strcpy(ishrc_filepath, usr_home);
+	strcpy(ishrc_filepath, getenv("HOME"));
 	strcat(ishrc_filepath, "/.ishrc");
-	printf("ishrc filepath: %s\n",ishrc_filepath);
 	FILE* fd = fopen(ishrc_filepath,"r");
+	free(ishrc_filepath);
+	
 	if(fd == NULL) fd=stdin;
 	
 	printf("------------------------------------\n");
