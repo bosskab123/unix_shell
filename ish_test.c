@@ -68,7 +68,7 @@ int main(void)
 		if (iSuccessful)
 		{
 			printf("Words:  ");
-			DynArray_map(oTokens, printWordToken, NULL);
+			DynArray_map(tokens, printWordToken, NULL);
 			printf("\n");
 		}		
 
