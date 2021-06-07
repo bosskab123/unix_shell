@@ -15,7 +15,6 @@
 
 /*--------------------------------------------------------------------*/
 
-
 int main(void)
 
 /* Read a line from stdin, and write to stdout each number and word

@@ -16,6 +16,6 @@ void printWordToken(void *pvItem, void *pvExtra);
    value consists of string pcValue.  Return NULL if insufficient
    memory is available.  The caller owns the Token. */
 struct Token *makeToken(enum TokenType eTokenType,
-   char *pcValue)
+   char *pcValue);
 
 #endif
