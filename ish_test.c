@@ -38,6 +38,7 @@ int main(void)
 	*/
 	char acLine[MAX_LINE_SIZE];
 	char **arrTokens;
+	char command[MAX_LINE_SIZE];
 	DynArray_T tokens;
 	int iSuccessful, iBuiltIn=1, number_token;
 	
@@ -85,10 +86,12 @@ int main(void)
 		printf("The number of token is %d\n", number_token);
 		printf("Tokens are ");
 		int i=0;
-		for(i=0;i<number_token,i++){
+		for(i=0;i<number_token;i++){
 			printf("%s, ",arrTokens[i]);
 		}
 		printf("\n");
+		strcpy(command,arrTokens[0]);
+		
 		
 		/* setenv var [value]: set variable var to value. If value is omitted, set to empyty string. */
 		if (strcmp(command, "setenv") == 0)
