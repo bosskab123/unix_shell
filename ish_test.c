@@ -15,6 +15,10 @@
 
 /*--------------------------------------------------------------------*/
 
+enum {MAX_LINE_SIZE = 1024};
+
+enum {FALSE, TRUE};
+
 int main(void)
 
 /* Read a line from stdin, and write to stdout each number and word
