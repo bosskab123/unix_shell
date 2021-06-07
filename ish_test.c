@@ -4,9 +4,9 @@
 /* Illustrate lexical analysis using a deterministic finite state     */
 /* automaton (DFA)                                                    */
 /*--------------------------------------------------------------------*/
-
-#define _BSD_SOURCE
 #define _GNU_SOURCE
+#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 #include "dynarray.h"
 #include "token.h"
 #include <ctype.h>
