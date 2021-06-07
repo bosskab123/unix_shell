@@ -18,7 +18,7 @@
 /*--------------------------------------------------------------------*/
 
 #define MAX_LINE_SIZE 1024
-
+#define MAX_PATH_SIZE 1024
 int main(void)
 
 /* Read a line from stdin, and write to stdout each number and word
@@ -32,10 +32,14 @@ int main(void)
    
    /* Open ".ishrc" in the home directory 
       If .ishrc is not found, the file descriptor is set to stdin*/
-   char *abs_filepath = "~/.ishrc";
-   char rel_filepath[MAX_LINE_SIZE];
-   char *ptr_filepath = realpath(abs_filepath, rel_filepath); 
-   printf("filepath: %s\n",ptr);
+   	char cwd[MAX_PATH_SIZE];
+   	if (getcwd(cwd, sizeof(cwd)) != NULL) {
+       	printf("Current working dir: %s\n", cwd);
+   	}
+	else {
+       	perror("getcwd() error");
+       	return 1;
+   	}
    int fd = open("~/.ishrc",O_RDONLY);
    if(fd == -1) fd = 0;
    
