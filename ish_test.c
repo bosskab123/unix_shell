@@ -37,7 +37,6 @@ int main(void)
 		cwd: current working directory
 	*/
 	char acLine[MAX_LINE_SIZE];
-	char **arrTokens;
 	char command[MAX_LINE_SIZE];
 	DynArray_T tokens;
 	int iSuccessful, iBuiltIn=1, number_token;
@@ -74,25 +73,14 @@ int main(void)
 		iSuccessful = lexLine(acLine, tokens);
 		if (!iSuccessful) printf("Something wrong!!\n");
 
+		number_token = DynArray_getLength(tokens);
+		strcpy(command, getTokenValue( DynArray_get(tokens, 0) ));
+		printf("command is %s\n",command);
 		/*
 			There are 5 built-in commands: setenv, unsetenv, cd, exit, fg
 			We check if the first token is one of the built-in command.
 		*/
-		
-		number_token = DynArray_getLength(tokens);
-		arrTokens = (char **)malloc( number_token * sizeof(char *));
-		DynArray_toArray(tokens, (void **)arrTokens);
-		
-		printf("The number of token is %d\n", number_token);
-		printf("Tokens are ");
-		int i=0;
-		for(i=0;i<number_token;i++){
-			printf("%s, ",arrTokens[i]);
-		}
-		printf("\n");
-		strcpy(command,arrTokens[0]);
-		
-		
+	
 		/* setenv var [value]: set variable var to value. If value is omitted, set to empyty string. */
 		if (strcmp(command, "setenv") == 0)
 		{
