@@ -18,7 +18,7 @@ enum {MAX_LINE_SIZE = 1024};
 
 enum {FALSE, TRUE};
 
-enum TokenType {TOKEN_STRING, TOKEN_WORD, TOKEN_PIPE, TOKEN_BG};
+enum TokenType {TOKEN_WORD, TOKEN_PIPE, TOKEN_BG};
 
 /*--------------------------------------------------------------------*/
 
@@ -43,19 +43,6 @@ void freeToken(void *pvItem, void *pvExtra)
    struct Token *psToken = (struct Token*)pvItem;
    free(psToken->pcValue);
    free(psToken);
-}
-
-/*--------------------------------------------------------------------*/
-
-void printNumberToken(void *pvItem, void *pvExtra)
-
-/* Print token pvItem to stdout iff it is a number.  pvExtra is
-   unused. */
-
-{
-   struct Token *psToken = (struct Token*)pvItem;
-   if (psToken->eType == TOKEN_NUMBER)
-      printf("%s ", psToken->pcValue);
 }
 
 /*--------------------------------------------------------------------*/
@@ -141,7 +128,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 					if (iValueIndex != 0)
 					{
 						acValue[iValueIndex] = '\0';
-						psToken = makeToken(TOKEN_NUMBER, acValue);
+						psToken = makeToken(TOKEN_WORD, acValue);
 						if (psToken == NULL)
 						{
 							fprintf(stderr, "Cannot allocate memory\n");
