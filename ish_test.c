@@ -26,12 +26,18 @@ int main(void)
    that it contains.  Repeat until EOF.  Return 0 iff successful. */
 
 {
-	
+	/*
+		acLine: input line buffer
+		tokens: Array of tokens obtained from tokenizing acLine
+	*/
 	char acLine[MAX_LINE_SIZE];
-	DynArray_T oTokens;
+	DynArray_T tokens;
 	int iSuccessful;
-	/* Open ".ishrc" in the home directory 
-	If .ishrc is not found, the file descriptor is set to stdin*/
+	
+	/* 
+		Open ".ishrc" in the home directory 
+		If .ishrc is not found, the file descriptor is set to stdin
+	*/
 	char *ishrc_filepath = (char *)malloc(MAX_PATH_SIZE * sizeof(char));
 	strcpy(ishrc_filepath, getenv("HOME"));
 	strcat(ishrc_filepath, "/.ishrc");
@@ -40,31 +46,27 @@ int main(void)
 	
 	if(fd == NULL) fd=stdin;
 	
-	printf("------------------------------------\n");
+	/*
+		Read each line from the input stream and stored the tokenized string in tokens
+	*/
 	while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
 	{
-		oTokens = DynArray_new(0);
-		if (oTokens == NULL)
+		// Print out the line 
+		printf("% %s\n", acLine);
+		
+		// Allocate memory for tokens
+		tokens = DynArray_new(0);
+		if (tokens == NULL)
 		{
 			fprintf(stderr, "Cannot allocate memory\n");
 			exit(EXIT_FAILURE);
 		}
 
-		iSuccessful = lexLine(acLine, oTokens);
-		if (iSuccessful)
-		{
-			printf("Numbers:  ");
-			DynArray_map(oTokens, printNumberToken, NULL);
-			printf("\n");
+		// Tokenize string in acLine into token and save in tokens
+		
 
-			printf("Words:  ");
-        	DynArray_map(oTokens, printWordToken, NULL);
-        	printf("\n");
-		}
-    	printf("------------------------------------\n");
-
-		DynArray_map(oTokens, freeToken, NULL);
-		DynArray_free(oTokens);
+		DynArray_map(tokens, freeToken, NULL);
+		DynArray_free(tokens);
 	}
 	fclose(fd);
 
