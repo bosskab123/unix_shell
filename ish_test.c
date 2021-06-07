@@ -81,7 +81,7 @@ int main(void)
 		strcpy(command,DynArray_get(tokens,0));
 		number_token = DynArray_getLength(tokens);
 		
-		printf("The command is %s\n",(char *)DynArray_get(tokens,0));
+		printf("The command is %s\n",(char *)DynArray_get(tokens,1));
 		printf("The number of token is %d\n", number_token);
 		
 		/* setenv var [value]: set variable var to value. If value is omitted, set to empyty string. */
