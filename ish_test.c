@@ -41,7 +41,7 @@ int main(void)
        	perror("getcwd() error");
        	return 1;
    	}
-   int fd = open("~/.ishrc",O_RDONLY);
+   int fd = open("/mnt/home/.ishrc",O_RDONLY);
    if(fd == -1) fd = 0;
    
    printf("------------------------------------\n");
