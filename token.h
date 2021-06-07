@@ -1,7 +1,7 @@
 #ifndef TOKEN_INCLUDED
 #define TOKEN_INCLUDED
 
-enum TokenType {TOKEN_NUMBER, TOKEN_WORD};
+enum TokenType {TOKEN_STRING, TOKEN_WORD, TOKEN_PIPE, TOKEN_BG};
 
 /* Free token pvItem.  pvExtra is unused. */
 void freeToken(void *pvItem, void *pvExtra);

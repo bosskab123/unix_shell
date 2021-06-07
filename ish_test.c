@@ -60,6 +60,7 @@ int main(void)
 			fprintf(stderr, "Cannot allocate memory\n");
 			exit(EXIT_FAILURE);
 		}
+		
 
 		// Tokenize string in acLine into token and save in tokens
 		

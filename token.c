@@ -18,7 +18,7 @@ enum {MAX_LINE_SIZE = 1024};
 
 enum {FALSE, TRUE};
 
-enum TokenType {TOKEN_NUMBER, TOKEN_WORD};
+enum TokenType {TOKEN_STRING, TOKEN_WORD, TOKEN_PIPE, TOKEN_BG};
 
 /*--------------------------------------------------------------------*/
 
@@ -115,7 +115,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
    pcLine. */
 
 {
-   enum LexState {STATE_START, STATE_IN_NUMBER, STATE_IN_WORD};
+   enum LexState {STATE_START, STATE_IN_WORD, STATE_IN_STRING};
 
    enum LexState eState = STATE_START;
 
@@ -133,135 +133,115 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
       /* "Read" the next character from pcLine. */
       c = pcLine[iLineIndex++];
 
-      switch (eState)
-      {
-         case STATE_START:
-            if ((c == '\n') || (c == '\0'))
-               return TRUE;
-            else if (isdigit(c))
-            {
-               acValue[iValueIndex++] = c;
-               eState = STATE_IN_NUMBER;
-            }
-            else if (isalpha(c))
-            {
-               acValue[iValueIndex++] = c;
-               eState = STATE_IN_WORD;
-            }
-            else if ((c == ' ') || (c == '\t'))
-               eState = STATE_START;
-            else
-            {
-               fprintf(stderr, "Invalid line\n");
-               return FALSE;
-            }
-            break;
-
-         case STATE_IN_NUMBER:
-            if ((c == '\n') || (c == '\0'))
-            {
-               /* Create a NUMBER token. */
-               acValue[iValueIndex] = '\0';
-               psToken = makeToken(TOKEN_NUMBER, acValue);
-               if (psToken == NULL)
-               {
-                  fprintf(stderr, "Cannot allocate memory\n");
-                  return FALSE;
-               }
-               if (! DynArray_add(oTokens, psToken))
-               {
-                  fprintf(stderr, "Cannot allocate memory\n");
-                  return FALSE;
-               }
-               iValueIndex = 0;
-
-               return TRUE;
-            }
-            else if (isdigit(c))
-            {
-               acValue[iValueIndex++] = c;
-               eState = STATE_IN_NUMBER;
-            }
-            else if ((c == ' ') || (c == '\t'))
-            {
-               /* Create a NUMBER token. */
-               acValue[iValueIndex] = '\0';
-               psToken = makeToken(TOKEN_NUMBER, acValue);
-               if (psToken == NULL)
-               {
-                  fprintf(stderr, "Cannot allocate memory\n");
-                  return FALSE;
-               }
-               if (! DynArray_add(oTokens, psToken))
-               {
-                  fprintf(stderr, "Cannot allocate memory\n");
-                  return FALSE;
-               }
-               iValueIndex = 0;
-
-               eState = STATE_START;
-            }
-            else
-            {
-               fprintf(stderr, "Invalid line\n");
-               return FALSE;
-            }
-            break;
-
-         case STATE_IN_WORD:
-            if ((c == '\n') || (c == '\0'))
-            {
-               /* Create a WORD token. */
-               acValue[iValueIndex] = '\0';
-               psToken = makeToken(TOKEN_WORD, acValue);
-               if (psToken == NULL)
-               {
-                  fprintf(stderr, "Cannot allocate memory\n");
-                  return FALSE;
-               }
-               if (! DynArray_add(oTokens, psToken))
-               {
-                  fprintf(stderr, "Cannot allocate memory\n");
-                  return FALSE;
-               }
-               iValueIndex = 0;
-
-               return TRUE;
-            }
-            else if (isalpha(c))
-            {
-               acValue[iValueIndex++] = c;
-               eState = STATE_IN_WORD;
-            }
-            else if ((c == ' ') || (c == '\t'))
-            {
-               /* Create a WORD token. */
-               acValue[iValueIndex] = '\0';
-               psToken = makeToken(TOKEN_WORD, acValue);
-               if (psToken == NULL)
-               {
-                  fprintf(stderr, "Cannot allocate memory\n");
-                  return FALSE;
-               }
-               if (! DynArray_add(oTokens, psToken))
-               {
-                  fprintf(stderr, "Cannot allocate memory\n");
-                  return FALSE;
-               }
-               iValueIndex = 0;
-
-               eState = STATE_START;
-            }
-            else
-            {
-               fprintf(stderr, "Invalid line\n");
-               return FALSE;
-            }
-            break;
-
-         default:
-            assert(FALSE);
-      }
-   }
+		switch (eState)
+		{
+			case STATE_START:
+				if ((c == '\n') || (c == '\0'))
+				{
+					if (iValueIndex != 0)
+					{
+						acValue[iValueIndex] = '\0';
+						psToken = makeToken(TOKEN_NUMBER, acValue);
+						if (psToken == NULL)
+						{
+							fprintf(stderr, "Cannot allocate memory\n");
+							return FALSE;
+						}
+						if (! DynArray_add(oTokens, psToken))
+						{
+							fprintf(stderr, "Cannot allocate memory\n");
+							return FALSE;
+						}
+						iValueIndex = 0;
+						
+						return TRUE;
+					}
+					return TRUE;
+				}
+				else if (c == '"')
+			    {
+			       eState = STATE_IN_STRING;
+			    }
+			    else if (isalpha(c) || isdigit(c))
+			    {
+			       acValue[iValueIndex++] = c;
+			       eState = STATE_IN_WORD;
+			    }
+			    else if ((c == ' ') || (c == '\t'))
+			       eState = STATE_START;
+			    else
+			    {
+			       fprintf(stderr, "Invalid line\n");
+			       return FALSE;
+			    }
+			    break;
+			
+			case STATE_IN_STRING:
+				if(c != '"')
+				{
+					acValue[iValueIndex++] = c;
+					eState = STATE_IN_STRING;
+				}
+				else
+				{
+					eState = STATE_START;
+				}
+				break;
+			
+			case STATE_IN_WORD:
+				if ((c == '\n') || (c == '\0'))
+				{
+					/* Create a WORD token. */
+					acValue[iValueIndex] = '\0';
+					psToken = makeToken(TOKEN_WORD, acValue);
+					if (psToken == NULL)
+					{
+						fprintf(stderr, "Cannot allocate memory\n");
+						return FALSE;
+					}
+					if (! DynArray_add(oTokens, psToken))
+					{
+						fprintf(stderr, "Cannot allocate memory\n");
+						return FALSE;
+					}
+					iValueIndex = 0;
+					
+					return TRUE;
+				}
+				else if (isalpha(c) || isdigit(c))
+				{
+					acValue[iValueIndex++] = c;
+					eState = STATE_IN_WORD;
+				}
+				else if ((c == ' ') || (c == '\t'))
+				{
+					/* Create a WORD token. */
+					acValue[iValueIndex] = '\0';
+					psToken = makeToken(TOKEN_WORD, acValue);
+					if (psToken == NULL)
+					{
+						fprintf(stderr, "Cannot allocate memory\n");
+						return FALSE;
+					}
+					if (! DynArray_add(oTokens, psToken))
+					{
+						fprintf(stderr, "Cannot allocate memory\n");
+						return FALSE;
+					}
+					iValueIndex = 0;
+					
+					eState = STATE_START;
+				}
+				else
+				{
+				   fprintf(stderr, "Invalid line\n");
+				   return FALSE;
+				}
+				break;
+				
+			default:
+				assert(FALSE);
+		}
+	}
 }
 
