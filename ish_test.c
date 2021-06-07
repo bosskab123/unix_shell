@@ -33,7 +33,7 @@ int main(void)
    /* Open ".ishrc" in the home directory 
       If .ishrc is not found, the file descriptor is set to stdin*/
    int fd = open("~/.ishrc",O_RDONLY);
-   if(fd == -1) fd = stdin;
+   if(fd == -1) fd = 0;
    
    printf("------------------------------------\n");
    while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
