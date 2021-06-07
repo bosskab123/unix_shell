@@ -74,7 +74,7 @@ int main(void)
 		if (!iSuccessful) printf("Something wrong!!\n");
 
 		number_token = DynArray_getLength(tokens);
-		strcpy(command, getTokenValue( DynArray_get(tokens, 0) ));
+		strcpy(command, getTokenValue(DynArray_get(tokens, 0)) );
 		printf("command is %s\n",command);
 		/*
 			There are 5 built-in commands: setenv, unsetenv, cd, exit, fg
@@ -85,17 +85,19 @@ int main(void)
 		if (strcmp(command, "setenv") == 0)
 		{
 			// value is not determined
-			if (number_token == 2 && strcmp(DynArray_get(tokens,1),"") != 0)
+			if (number_token == 2 && strcmp( getTokenValue(DynArray_get(tokens, 1)),"") != 0)
 			{
 				setenv(DynArray_get(tokens,1), "", 1);
 			}
-			else if (number_token == 3 && strcmp(DynArray_get(tokens,1),"") != 0 && strcmp(DynArray_get(tokens,2),"|") != 0 && strcmp(DynArray_get(tokens,2),"<") != 0 && strcmp(DynArray_get(tokens,2),">") != 0)
+			else if (number_token == 3 && strcmp(getTokenValue(DynArray_get(tokens,1)),"") != 0 && strcmp(getTokenValue(DynArray_get(tokens,2)),"|") != 0 \
+					&& strcmp(getTokenValue(DynArray_get(tokens,2)),"<") != 0 && strcmp(getTokenValue(DynArray_get(tokens,2)),">") != 0)
 			{
 				setenv(DynArray_get(tokens,1), DynArray_get(tokens,2), 1);
 			}
-			else if ((number_token == 3 && (strcmp(DynArray_get(tokens,2),"|") == 0 || strcmp(DynArray_get(tokens,2),"<") == 0 || strcmp(DynArray_get(tokens,2),">") == 0)) \
-						||\
-					(number_token > 3 && (strcmp(DynArray_get(tokens,3),"|") == 0 || strcmp(DynArray_get(tokens,3),"<") == 0 || strcmp(DynArray_get(tokens,3),">") == 0)))
+			else if ((number_token == 3 && (strcmp(getTokenValue(DynArray_get(tokens,2)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,2)),"<") == 0 \
+					|| strcmp(getTokenValue(DynArray_get(tokens,2)),">") == 0)) \
+					|| (number_token > 3 && (strcmp(getTokenValue(DynArray_get(tokens,3)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,3)),"<") == 0 \
+					|| strcmp(getTokenValue(DynArray_get(tokens,3)),">") == 0)))
 			{
 				fprintf(stderr,"Error: Cannot use piped command or file redirection with setenv\n");
 			}
@@ -107,13 +109,16 @@ int main(void)
 		// unsetenv var: destroy the variable var.
 		else if (strcmp(command, "unsetenv") == 0)
 		{
-			if (number_token == 2 && strcmp(DynArray_get(tokens,1),"") != 0 \
-				&& strcmp(DynArray_get(tokens,1),"|") != 0 && strcmp(DynArray_get(tokens,1),"<") != 0 && strcmp(DynArray_get(tokens,1),">") != 0)
+			if (number_token == 2 && strcmp(getTokenValue(DynArray_get(tokens,1)),"") != 0 \
+				&& strcmp(getTokenValue(DynArray_get(tokens,1)),"|") != 0 && strcmp(getTokenValue(DynArray_get(tokens,1)),"<") != 0 \
+				&& strcmp(getTokenValue(DynArray_get(tokens,1)),">") != 0)
 			{
 				unsetenv(DynArray_get(tokens,1));
 			}
-			else if ((number_token == 2 && (strcmp(DynArray_get(tokens,1),"|") == 0 || strcmp(DynArray_get(tokens,1),"<") == 0 || strcmp(DynArray_get(tokens,1),">") == 0)) \
-					|| (number_token > 2 && (strcmp(DynArray_get(tokens,2),"|") == 0 || strcmp(DynArray_get(tokens,2),"<") == 0 || strcmp(DynArray_get(tokens,2),">") == 0)))
+			else if ((number_token == 2 && (strcmp(getTokenValue(DynArray_get(tokens,1)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,1)),"<") == 0 \
+					|| strcmp(getTokenValue(DynArray_get(tokens,1)),">") == 0)) \
+					|| (number_token > 2 && (strcmp(getTokenValue(DynArray_get(tokens,2)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,2)),"<") == 0 \
+					|| strcmp(getTokenValue(DynArray_get(tokens,2)),">") == 0)))
 			{
 				fprintf(stderr,"Error: Cannot use piped command or file redirection with unsetenv\n");
 			}
@@ -125,7 +130,7 @@ int main(void)
 		// cd [dir]: change current working directory to dir. If dir is omitted, change to user's HOME directory
 		else if (strcmp(command, "cd") == 0)
 		{
-			
+			printf("Change directory pls\n");
 		}
 		// exit: exit shell with status 0
 		else if (strcmp(command, "exit") == 0)
