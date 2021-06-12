@@ -2,6 +2,7 @@
 #include "dynarray.h"
 #include <stdlib.h>
 #include <unistd.h>
+#include<sys/wait.h>
 
 void ChildPID_terminate_handler(int iSig)
 {
