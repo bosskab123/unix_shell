@@ -183,10 +183,7 @@ int main(void)
 			pid = fork();
 			int status;
 			
-			if(pid != 0){
-				printf("parent\n");
-			}
-			else{
+			if(pid == 0){
 				
 				// Create a char array of token instead of using Dynamic array
 				int num_argv = DynArray_getLength(tokens);
