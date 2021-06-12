@@ -132,7 +132,10 @@ int main(void)
 		else if (strcmp(command, "cd") == 0)
 		{
 			if(number_token > 2) fprintf(stderr,"-bash: cd: too many arguments\n");
-			else if(number_token == 2) chdir(DynArray_get(tokens,1));
+			else if(number_token == 2){
+				pritnf("Move to %s\n",DynArray_get(tokens,1));
+				chdir(DynArray_get(tokens,1));
+			}
 			else chdir(getenv("HOME"));
 		}
 		// exit: exit shell with status 0
