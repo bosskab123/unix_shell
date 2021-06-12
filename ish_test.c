@@ -182,7 +182,7 @@ int main(void)
 			}
 			
 			pid = wait(&status);
-			printf("child has returned\n");
+			printf("child %d has returned\n", pid);
 			
 			DynArray_map(tokens, freeToken, NULL);
 			DynArray_free(tokens);
