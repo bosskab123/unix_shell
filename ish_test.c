@@ -132,10 +132,7 @@ int main(void)
 		else if (strcmp(command, "cd") == 0)
 		{
 			if(number_token > 2) fprintf(stderr,"-bash: cd: too many arguments\n");
-			else if(number_token == 2){
-				printf("Move to %s\n", getTokenValue(DynArray_get(tokens,1)));
-				chdir(getTokenValue(DynArray_get(tokens,1)));
-			}
+			else if(number_token == 2) chdir(getTokenValue(DynArray_get(tokens,1)));
 			else chdir(getenv("HOME"));
 		}
 		// exit: exit shell with status 0
@@ -180,14 +177,18 @@ int main(void)
 				DynArray_map(tokens, freeToken, NULL);
 				DynArray_free(tokens);
 				
-				// Create a process to handle with the program.				
-				execvp((char *)argv[0],(char **)argv);
+				// Create a process to handle with the program.			
+				int child_status;	
+				child_status = execvp((char *)argv[0],(char **)argv);
+				fprintf(stderr,"error status: %d for running %s\n",child_status, command);
 				exit(0);
 				
 			}
 			
-			pid = wait(&status);
-			printf("child %d has returned\n", pid);
+			if( foreground == 1 ){
+				pid = wait(&status);
+				printf("child %d has returned\n", pid);
+			}
 			
 			DynArray_map(tokens, freeToken, NULL);
 			DynArray_free(tokens);
