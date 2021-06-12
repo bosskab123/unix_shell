@@ -166,7 +166,7 @@ int main(void)
 				argv = (void **)malloc(num_argv*sizeof(void *));
 				int i;
 				for(i=0;i<num_argv;i++){
-					argv[i] = (void *)malloc(20*sizeof(void));
+					argv[i] = (void *)malloc(20*sizeof(char));
 				}
 				DynArray_toArray(tokens, argv);
 				DynArray_map(tokens, freeToken, NULL);
