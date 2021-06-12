@@ -80,7 +80,7 @@ int main(void)
 	{
 		iBuiltIn = 1;
 		// Print out the line 
-		printf("%% %s\n", acLine);
+		printf("%% %s", acLine);
 		
 		// Allocate memory for tokens
 		tokens = DynArray_new(0);
