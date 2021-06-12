@@ -172,7 +172,9 @@ int main(void)
 				DynArray_map(tokens, freeToken, NULL);
 				DynArray_free(tokens);
 				
-				// Create a process to handle with the program.
+				for(i=0;i<num_argc;i++) printf("%d -> %s\n",i+1,argc[i] );
+				
+				// Create a process to handle with the program.				
 				execvp((char *)argv[0],(char **)argv);
 				printf("Should not print this\n");
 				exit(0);
