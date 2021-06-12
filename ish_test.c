@@ -131,7 +131,9 @@ int main(void)
 		// cd [dir]: change current working directory to dir. If dir is omitted, change to user's HOME directory
 		else if (strcmp(command, "cd") == 0)
 		{
-			printf("Change directory pls\n");
+			if(number_token > 2) fprintf(stderr,"-bash: cd: too many arguments\n");
+			else if(number_token == 2) chdir(DynArray_get(tokens,1));
+			else chdir(getenv("HOME"));
 		}
 		// exit: exit shell with status 0
 		else if (strcmp(command, "exit") == 0)
@@ -149,6 +151,9 @@ int main(void)
 		else iBuiltIn = 0;
 		
 		if(iBuiltIn == 0){
+			
+			// Clear all I/O buffers
+			fflush(NULL);
 			
 			// Fork child process to do the command
 			pid_t pid;
