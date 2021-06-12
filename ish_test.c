@@ -42,8 +42,9 @@ void SIGINT_handler(int iSig)
 {
 	/* Send SIGINT to children */
 	int childPID_length = DynArray_getLength(childPIDs);
+	int i;
 	for(i=0;i<childPID_length;i++){
-		kill( DynArray_get(childPIDs,i), SIGINT )l
+		kill( DynArray_get(childPIDs,i), SIGINT );
 	}
 }
 
