@@ -133,8 +133,8 @@ int main(void)
 		{
 			if(number_token > 2) fprintf(stderr,"-bash: cd: too many arguments\n");
 			else if(number_token == 2){
-				printf("Move to %s\n", (char *)DynArray_get(tokens,1));
-				chdir((char *)DynArray_get(tokens,1));
+				printf("Move to %s\n", getTokenValue(DynArray_get(tokens,1)));
+				chdir(getTokenValue(DynArray_get(tokens,1)));
 			}
 			else chdir(getenv("HOME"));
 		}
