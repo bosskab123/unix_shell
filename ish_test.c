@@ -199,8 +199,7 @@ int main(void)
 				
 				// Create a process to handle with the program.			
 				int child_status;
-				if (number_token == 1) child_status = execvp(argv[0],argv[0]);
-				else child_status = execvp(argv[0],argv);
+				child_status = execvp(argv[0],argv);
 				fprintf(stderr,"error status: %d for running %s\n",child_status, command);
 				exit(0);
 				
