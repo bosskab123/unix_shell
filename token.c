@@ -160,17 +160,12 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 			    {
 			       eState = STATE_IN_STRING;
 			    }
-			    else if (isalpha(c) || isdigit(c))
-			    {
-			       acValue[iValueIndex++] = c;
-			       eState = STATE_IN_WORD;
-			    }
 			    else if ((c == ' ') || (c == '\t'))
 			       eState = STATE_START;
 			    else
 			    {
-			       fprintf(stderr, "Invalid line\n");
-			       return FALSE;
+			       acValue[iValueIndex++] = c;
+			       eState = STATE_IN_WORD;
 			    }
 			    break;
 			
