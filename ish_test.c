@@ -75,7 +75,6 @@ int main(void)
 
 		number_token = DynArray_getLength(tokens);
 		strcpy(command, getTokenValue(DynArray_get(tokens, 0)) );
-		printf("command is %s\n",command);
 		/*
 			There are 5 built-in commands: setenv, unsetenv, cd, exit, fg
 			We check if the first token is one of the built-in command.
@@ -150,6 +149,23 @@ int main(void)
 		if(!iBuiltIn){
 			DynArray_map(tokens, freeToken, NULL);
 			DynArray_free(tokens);
+			
+			// Fork child process to do the command
+			pid_t pid;
+			pid = fork();
+			int status;
+			
+			if(pid != 0){
+				printf("parent\n");
+			}
+			else{
+				printf("child\n");
+				exit(0);
+			}
+			
+			pid = wait(&status);
+			printf("child has returned\n");
+			
 			continue;
 		}
 		
