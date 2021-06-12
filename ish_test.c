@@ -9,6 +9,7 @@
 #define _DEFAULT_SOURCE
 #include "dynarray.h"
 #include "token.h"
+#include "child.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,10 +24,6 @@
 
 #define MAX_LINE_SIZE 1024
 #define MAX_PATH_SIZE 1024
-
-void child_terminate(int iSig){
-	wait(NULL);
-}
 
 int main(void)
 
@@ -48,13 +45,25 @@ int main(void)
 	/*
 		acLine: input line buffer
 		tokens: Array of tokens obtained from tokenizing acLine
-		vars: Array of variables declared via setenv var [value] where the value of var is value or empty string if value is omitted
-		cwd: current working directory
+		childPIDs: Array of child process ID invoked by this parent
+		iBuiltIn: 1 if the command is a built-in command
+		number_token: the number of tokens in the command
 	*/
 	char acLine[MAX_LINE_SIZE];
 	char command[MAX_LINE_SIZE];
 	DynArray_T tokens;
+	DynArray_T childPIDs;
 	int iSuccessful, iBuiltIn, number_token;
+	
+	/*
+		initiate child process storage
+	*/
+	child_processes = ChildPID_init(0);
+	
+	/*
+		Setup signal handler for each signal
+	*/
+	signal(SIGCHLD, ChildPID_terminate_handler);
 	
 	/* 
 		Open ".ishrc" in the home directory 
@@ -69,11 +78,6 @@ int main(void)
 		fd = stdin;
 	}
 	free(ishrc_filepath);
-	
-	/*
-		Setup signal handler for each signal
-	*/
-	signal(SIGCHLD, child_terminate);
 	
 	/*
 		Read each line from the input stream and stored the tokenized string in tokens
@@ -185,8 +189,12 @@ int main(void)
 			pid = fork();
 			int status;
 			
-			if(pid == 0){
-				
+			if(pid != 0)
+			{
+				ChildPID_add(childPIDs, pid);
+			}
+			else
+			{	
 				// Create a char array of token instead of using Dynamic array
 				int num_argv = DynArray_getLength(tokens);
 				char **argv;
@@ -222,6 +230,9 @@ int main(void)
 		DynArray_free(tokens);
 	}
 	fclose(fd);
+	
+	DynArray_map(tokens, freeChildPID, NULL);
+	DynArray_free(childPIDs);
 
 	return 0;
 }
