@@ -176,7 +176,7 @@ int main(void)
 			
 			// Check if it is foreground or background
 			int foreground = 0;
-			if( strcmp("&",getTokenValue(DynArray_get(tokens,num_tokens-1))) == 0 ) foreground = 1;
+			if( strcmp("&",getTokenValue(DynArray_get(tokens,number_token-1))) == 0 ) foreground = 1;
 			
 			// Fork child process to do the command
 			pid_t pid;
