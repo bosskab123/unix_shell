@@ -201,11 +201,6 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 					
 					return TRUE;
 				}
-				else if (isalpha(c) || isdigit(c))
-				{
-					acValue[iValueIndex++] = c;
-					eState = STATE_IN_WORD;
-				}
 				else if (c == '"')
 				{
 					eState = STATE_IN_STRING;
@@ -231,8 +226,8 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 				}
 				else
 				{
-				   fprintf(stderr, "Invalid line\n");
-				   return FALSE;
+					acValue[iValueIndex++] = c;
+					eState = STATE_IN_WORD;
 				}
 				break;
 				
