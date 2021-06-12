@@ -147,7 +147,7 @@ int main(void)
 		}
 		else iBuiltIn = 0;
 		
-		if(!iBuiltIn){
+		if(iBuiltIn == 0){
 			DynArray_map(tokens, freeToken, NULL);
 			DynArray_free(tokens);
 			
