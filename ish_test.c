@@ -49,11 +49,17 @@ void SIGINT_handler(int iSig)
 	}
 }
 
+void SIGQUIT_handler2(int iSig)
+{
+	exit(0);
+}
+
+
 void SIGQUIT_handler1(int iSig)
 {
 	
 	/* Print "Type Ctrl-\ again within 5 seconds to exit" */
-	fprintf(stdout,"Type Ctrl-\ again within 5 seconds to exit.");
+	fprintf(stdout,"Type Ctrl-\\ again within 5 seconds to exit.");
 	
 	/* 
 		Set SIGQUIT the second time to responsible for exit 
@@ -70,11 +76,6 @@ void SIGQUIT_handler1(int iSig)
 		kill( *cpid, SIGQUIT );
 	}
 	
-}
-
-void SIGQUIT_handler2(int iSig)
-{
-	exit(0);
 }
 
 void SIGALRM_handler(int iSig)
