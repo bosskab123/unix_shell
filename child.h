@@ -9,6 +9,6 @@ void ChildPID_free(void *pvItem, void *pvExtra);
 
 void ChildPID_add(DynArray_T cp, int pid);
 
-int ChildPID_compare(void *pid1, void *pid2);
+int ChildPID_compare(const void *pid1, const void *pid2);
 
 #endif
