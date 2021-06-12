@@ -167,8 +167,8 @@ int main(void)
 				int i;
 				for(i=0;i<num_argv;i++){
 					argv[i] = (char *)malloc(20*sizeof(char));
+					strcpy(argv[i],getTokenValue(DynArray_get(tokens,i)));
 				}
-				DynArray_toArray(tokens, (void **)argv);
 				DynArray_map(tokens, freeToken, NULL);
 				DynArray_free(tokens);
 				
