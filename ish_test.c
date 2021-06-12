@@ -149,8 +149,6 @@ int main(void)
 		else iBuiltIn = 0;
 		
 		if(iBuiltIn == 0){
-			DynArray_map(tokens, freeToken, NULL);
-			DynArray_free(tokens);
 			
 			// Fork child process to do the command
 			pid_t pid;
@@ -161,12 +159,31 @@ int main(void)
 				printf("parent\n");
 			}
 			else{
-				printf("child\n");
+				
+				// Create a char array of token instead of using Dynamic array
+				int num_argv = DynArray_getLength(tokens);
+				char **argv;
+				argv = (char **)malloc(num_argv*sizeof(char *));
+				int i;
+				for(i=0;i<num_argv;i++){
+					*argv+i = (char *)malloc(20*sizeof(char));
+				}
+				DynArray_toArray(tokens, argv);
+				DynArray_map(tokens, freeToken, NULL);
+				DynArray_free(tokens);
+				
+				// Create a process to handle with the program.
+				execvp(argv[0],argv);
+				printf("Should not print this\n");
 				exit(0);
+				
 			}
 			
 			pid = wait(&status);
 			printf("child has returned\n");
+			
+			DynArray_map(tokens, freeToken, NULL);
+			DynArray_free(tokens);
 			
 			continue;
 		}
