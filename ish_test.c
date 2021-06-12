@@ -25,6 +25,28 @@
 #define MAX_LINE_SIZE 1024
 #define MAX_PATH_SIZE 1024
 
+DynArray_T childPIDs;
+int iSuccessful, iBuiltIn, number_token;
+
+void SIGCHLD_handler(int iSig)
+{
+	
+	int cpid = wait(NULL);
+	int iIndex = DynArray_search(childPIDs, &cpid, ChildPID_compare);
+	int *cp = DynArray_removeAt(childPIDs, iIndex);
+	free(cp);
+	
+}
+
+void SIGINT_handler(int iSig)
+{
+	/* Send SIGINT to children */
+	int childPID_length = DynArray_getLength(childPIDs);
+	for(i=0;i<childPID_length;i++){
+		kill( DynArray_get(childPIDs,i), SIGINT )l
+	}
+}
+
 int main(void)
 
 /* Read a line from stdin, and write to stdout each number and word
@@ -52,8 +74,6 @@ int main(void)
 	char acLine[MAX_LINE_SIZE];
 	char command[MAX_LINE_SIZE];
 	DynArray_T tokens;
-	DynArray_T childPIDs;
-	int iSuccessful, iBuiltIn, number_token;
 	
 	/*
 		initiate child process storage
@@ -63,7 +83,8 @@ int main(void)
 	/*
 		Setup signal handler for each signal
 	*/
-	signal(SIGCHLD, ChildPID_terminate_handler);
+	signal(SIGCHLD, SIGCHLD_handler);
+	signal(SIGINT, SIGINT_handler);
 	
 	/* 
 		Open ".ishrc" in the home directory 

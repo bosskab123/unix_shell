@@ -34,3 +34,8 @@ void ChildPID_add(DynArray_T cp, int pid)
 	*child_pid = pid;
 	DynArray_add(cp, child_pid);
 }
+
+int ChildPID_compare(int pid1, int pid2)
+{
+	return pid1 == pid2;
+}
