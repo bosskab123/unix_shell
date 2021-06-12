@@ -64,9 +64,11 @@ int main(void)
 	strcpy(ishrc_filepath, getenv("HOME"));
 	strcat(ishrc_filepath, "/.ishrc");
 	FILE* fd = fopen(ishrc_filepath,"r");
+	if (fd == NULL){
+		fprintf(stderr,".ishrc file is not found so the system automatically redirects to stdin.\n");
+		fd = stdin;
+	}
 	free(ishrc_filepath);
-	
-	if(fd == NULL) fd=stdin;
 	
 	/*
 		Setup signal handler for each signal
