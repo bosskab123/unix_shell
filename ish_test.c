@@ -162,18 +162,18 @@ int main(void)
 				
 				// Create a char array of token instead of using Dynamic array
 				int num_argv = DynArray_getLength(tokens);
-				char **argv;
-				argv = (char **)malloc(num_argv*sizeof(char *));
+				void **argv;
+				argv = (void **)malloc(num_argv*sizeof(void *));
 				int i;
 				for(i=0;i<num_argv;i++){
-					argv[i] = (char *)malloc(20*sizeof(char));
+					argv[i] = (void *)malloc(20*sizeof(void));
 				}
 				DynArray_toArray(tokens, argv);
 				DynArray_map(tokens, freeToken, NULL);
 				DynArray_free(tokens);
 				
 				// Create a process to handle with the program.
-				execvp(argv[0],argv);
+				execvp((char *)argv[0],(char **)argv);
 				printf("Should not print this\n");
 				exit(0);
 				
