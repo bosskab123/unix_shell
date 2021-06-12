@@ -163,10 +163,10 @@ int main(void)
 				// Create a char array of token instead of using Dynamic array
 				int num_argv = DynArray_getLength(tokens);
 				char **argv;
-				argv = (void **)malloc(num_argv*sizeof(void *));
+				argv = (char **)malloc(num_argv*sizeof(char *));
 				int i;
 				for(i=0;i<num_argv;i++){
-					argv[i] = (void *)malloc(20*sizeof(char));
+					argv[i] = (char *)malloc(20*sizeof(char));
 				}
 				DynArray_toArray(tokens, (void **)argv);
 				DynArray_map(tokens, freeToken, NULL);
