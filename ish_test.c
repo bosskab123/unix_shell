@@ -24,6 +24,9 @@
 #define MAX_LINE_SIZE 1024
 #define MAX_PATH_SIZE 1024
 
+void child_terminate(int iSig){
+	wait(NULL);
+}
 
 int main(void)
 
@@ -31,6 +34,17 @@ int main(void)
    that it contains.  Repeat until EOF.  Return 0 iff successful. */
 
 {
+	
+	/*
+		Make sure that SIGINT, SIGQUIT, SIGALRM are not blocked
+	*/
+	sigset_t sSet;
+	sigemptyset(&sSet);
+	sigaddset(&sSet, SIGINT);
+	sigaddset(&sSet, SIGQUIT);
+	sigaddset(&sSet, SIGALRM);
+	sigprocmask(SIG_UNBLOCK, &sSet, NULL);
+	
 	/*
 		acLine: input line buffer
 		tokens: Array of tokens obtained from tokenizing acLine
@@ -53,6 +67,11 @@ int main(void)
 	free(ishrc_filepath);
 	
 	if(fd == NULL) fd=stdin;
+	
+	/*
+		Setup signal handler for each signal
+	*/
+	signal(SIGCHLD, child_terminate);
 	
 	/*
 		Read each line from the input stream and stored the tokenized string in tokens
@@ -154,6 +173,10 @@ int main(void)
 			
 			// Clear all I/O buffers
 			fflush(NULL);
+			
+			// Check if it is foreground or background
+			int foreground = 0;
+			if( strcmp("&",getTokenValue(DynArray_get(tokens,num_tokens-1))) == 0 ) foreground = 1;
 			
 			// Fork child process to do the command
 			pid_t pid;
