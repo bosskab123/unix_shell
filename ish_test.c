@@ -40,7 +40,7 @@ int main(void)
 	char acLine[MAX_LINE_SIZE];
 	char command[MAX_LINE_SIZE];
 	DynArray_T tokens;
-	int iSuccessful, iBuiltIn=1, number_token;
+	int iSuccessful, iBuiltIn, number_token;
 	
 	/* 
 		Open ".ishrc" in the home directory 
@@ -59,6 +59,7 @@ int main(void)
 	*/
 	while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
 	{
+		iBuiltIn = 1;
 		// Print out the line 
 		printf("%% %s\n", acLine);
 		
