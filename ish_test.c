@@ -58,7 +58,7 @@ int main(void)
 	/*
 		initiate child process storage
 	*/
-	child_processes = ChildPID_init(0);
+	childPIDs = ChildPID_init(0);
 	
 	/*
 		Setup signal handler for each signal
@@ -207,9 +207,8 @@ int main(void)
 				DynArray_map(tokens, freeToken, NULL);
 				DynArray_free(tokens);
 				
-				// Create a process to handle with the program.			
-				int child_status;
-				child_status = execvp(argv[0],argv);
+				// Create a process to handle with the program.
+				execvp(argv[0],argv);
 				fprintf(stderr,"Error for running %s\n", command);
 				exit(0);
 				
@@ -231,7 +230,7 @@ int main(void)
 	}
 	fclose(fd);
 	
-	DynArray_map(tokens, freeChildPID, NULL);
+	DynArray_map(tokens, ChildPID_free, NULL);
 	DynArray_free(childPIDs);
 
 	return 0;
