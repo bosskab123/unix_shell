@@ -15,6 +15,7 @@
 #include <string.h>
 #include <assert.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
 
