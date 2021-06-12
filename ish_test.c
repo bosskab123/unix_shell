@@ -44,7 +44,8 @@ void SIGINT_handler(int iSig)
 	int childPID_length = DynArray_getLength(childPIDs);
 	int i;
 	for(i=0;i<childPID_length;i++){
-		kill( DynArray_get(childPIDs,i), SIGINT );
+		int *cpid = (int *)DynArray_get(childPIDs,i);
+		kill( *cpid, SIGINT );
 	}
 }
 
