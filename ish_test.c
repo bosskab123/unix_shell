@@ -49,6 +49,41 @@ void SIGINT_handler(int iSig)
 	}
 }
 
+void SIGQUIT_handler1(int iSig)
+{
+	
+	/* Print "Type Ctrl-\ again within 5 seconds to exit" */
+	fprintf(stdout,"Type Ctrl-\ again within 5 seconds to exit.");
+	
+	/* 
+		Set SIGQUIT the second time to responsible for exit 
+		After 5 seconds, SIGQUIT handler would be changed to the dafault (SIGQUIT_handler1)
+	*/
+	signal(SIGQUIT, SIGQUIT_handler2);
+	alarm(5);
+	
+	/* Send SIGINT to children */
+	int childPID_length = DynArray_getLength(childPIDs);
+	int i;
+	for(i=0;i<childPID_length;i++){
+		int *cpid = (int *)DynArray_get(childPIDs,i);
+		kill( *cpid, SIGQUIT );
+	}
+	
+}
+
+void SIGQUIT_handler2(int iSig)
+{
+	exit(0);
+}
+
+void SIGALRM_handler(int iSig)
+{
+	/* 5 seconds after the first SIGQUIT, it would set SIGQUIT_handler2 to SIGQUIT_handler1 */
+	signal(SIGQUIT, SIGQUIT_handler1);
+	alarm(0);
+}
+
 int main(void)
 
 /* Read a line from stdin, and write to stdout each number and word
@@ -87,6 +122,8 @@ int main(void)
 	*/
 	signal(SIGCHLD, SIGCHLD_handler);
 	signal(SIGINT, SIGINT_handler);
+	signal(SIGQUIT, SIGQUIT_handler1);
+	signal(SIGALRM, SIGALRM_handler);
 	
 	/* 
 		Open ".ishrc" in the home directory 
