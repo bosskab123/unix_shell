@@ -62,7 +62,7 @@ void SIGQUIT_handler1(int iSig)
 {
 	
 	/* Print "Type Ctrl-\ again within 5 seconds to exit" */
-	fprintf(stdout,"Type Ctrl-\\ again within 5 seconds to exit.");
+	fprintf(stderr,"Type Ctrl-\\ again within 5 seconds to exit.");
 	
 	/* 
 		Set SIGQUIT the second time to responsible for exit 
