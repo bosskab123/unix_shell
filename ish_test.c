@@ -321,6 +321,7 @@ int main(void)
 	/*
 		Read each line from the input stream and stored the tokenized string in tokens
 	*/
+
 //	LOOP:while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
 //	{
 //		// Tokenize string in acLine into token and save in tokens
@@ -365,14 +366,14 @@ int main(void)
 //			{
 //				setenv(DynArray_get(tokens,1), "", 1);
 //			}
-//			else if (number_token == 3 && strcmp(getTokenValue(DynArray_get(tokens,1)),"") != 0 && strcmp(getTokenValue(DynArray_get(tokens,2)),"|") != 0 \
+//			else if (number_token == 3 && strcmp(getTokenValue(DynArray_get(tokens,1)),"") != 0 && strcmp(getTokenValue(DynArray_get(tokens,2)),"|") != 0 
 //					&& strcmp(getTokenValue(DynArray_get(tokens,2)),"<") != 0 && strcmp(getTokenValue(DynArray_get(tokens,2)),">") != 0)
 //			{
 //				setenv(DynArray_get(tokens,1), DynArray_get(tokens,2), 1);
 //			}
-//			else if ((number_token == 3 && (strcmp(getTokenValue(DynArray_get(tokens,2)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,2)),"<") == 0 \
+//			else if ((number_token == 3 && (strcmp(getTokenValue(DynArray_get(tokens,2)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,2)),"<") == 0 
 //					|| strcmp(getTokenValue(DynArray_get(tokens,2)),">") == 0)) \
-//					|| (number_token > 3 && (strcmp(getTokenValue(DynArray_get(tokens,3)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,3)),"<") == 0 \
+//					|| (number_token > 3 && (strcmp(getTokenValue(DynArray_get(tokens,3)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,3)),"<") == 0 
 //					|| strcmp(getTokenValue(DynArray_get(tokens,3)),">") == 0)))
 //			{
 //				fprintf(stderr,"Error: Cannot use piped command or file redirection with setenv\n");
@@ -386,14 +387,14 @@ int main(void)
 //		else if (strcmp(command, "unsetenv") == 0)
 //		{
 //			if (number_token == 2 && strcmp(getTokenValue(DynArray_get(tokens,1)),"") != 0 \
-//				&& strcmp(getTokenValue(DynArray_get(tokens,1)),"|") != 0 && strcmp(getTokenValue(DynArray_get(tokens,1)),"<") != 0 \
+//				&& strcmp(getTokenValue(DynArray_get(tokens,1)),"|") != 0 && strcmp(getTokenValue(DynArray_get(tokens,1)),"<") != 0 
 //				&& strcmp(getTokenValue(DynArray_get(tokens,1)),">") != 0)
 //			{
 //				unsetenv(DynArray_get(tokens,1));
 //			}
-//			else if ((number_token == 2 && (strcmp(getTokenValue(DynArray_get(tokens,1)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,1)),"<") == 0 \
+//			else if ((number_token == 2 && (strcmp(getTokenValue(DynArray_get(tokens,1)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,1)),"<") == 0 
 //					|| strcmp(getTokenValue(DynArray_get(tokens,1)),">") == 0)) \
-//					|| (number_token > 2 && (strcmp(getTokenValue(DynArray_get(tokens,2)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,2)),"<") == 0 \
+//					|| (number_token > 2 && (strcmp(getTokenValue(DynArray_get(tokens,2)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,2)),"<") == 0 
 //					|| strcmp(getTokenValue(DynArray_get(tokens,2)),">") == 0)))
 //			{
 //				fprintf(stderr,"Error: Cannot use piped command or file redirection with unsetenv\n");
@@ -483,6 +484,7 @@ int main(void)
 //		DynArray_map(tokens, freeToken, NULL);
 //		DynArray_free(tokens);
 //	}
+
 	
 	
 	DynArray_map(childPIDs, ChildPID_free, NULL);
