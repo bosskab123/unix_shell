@@ -134,6 +134,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 
    int iLineIndex = 0;
    int iValueIndex = 0;
+   int num_token = 0;
    char c;
    char acValue[MAX_LINE_SIZE];
    struct Token *psToken;
@@ -327,7 +328,6 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 	}
 	
 	ANALYZE:
-		int num_token;
 		num_token = DynArray_getLength(oTokens);
 		int i;
 		for(i=0;i<num_token;i++){
