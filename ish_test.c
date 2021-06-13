@@ -24,6 +24,7 @@
 
 #define MAX_LINE_SIZE 1024
 #define MAX_PATH_SIZE 1024
+#define SYSTEM_NAME "./ish"
 
 DynArray_T childPIDs;
 char **argv;
@@ -31,8 +32,9 @@ int iSuccessful, iBuiltIn, number_token, number_argv;
 
 void SIGCHLD_handler(int iSig)
 {
+	int cpid = wait();
+	if(cpid == -1) return;
 	
-	int cpid = wait(NULL);
 	int iIndex = DynArray_search(childPIDs, &cpid, ChildPID_compare);
 	int *cp = DynArray_removeAt(childPIDs, iIndex);
 	free(cp);
@@ -159,23 +161,17 @@ int main(void)
 		}
 		
 		// Tokenize string in acLine into token and save in tokens
-		iSuccessful = lexLine(acLine, tokens);
+		char *errMsg = (char *)malloc(50*sizeof(char));
+		iSuccessful = lexLine(acLine, tokens, errMsg);
 		if (!iSuccessful) {
 			DynArray_map(tokens, freeToken, NULL);
 			DynArray_free(tokens);
-			continue;	
+			if(strcmp(errMsg,"") != 0) fprintf(stderr,"%s: %s\n",SYSTEM_NAME,errMsg);
+			continue;
 		}
 		
-		iBuiltIn = 1;		
-
+		iBuiltIn = 1;
 		number_token = DynArray_getLength(tokens);
-		
-		printf("-----------------------------------\n");
-		int a;
-		for(a=0;a<number_token;a++){
-			printf("token: (%s)\n",getTokenValue(DynArray_get(tokens,a)));
-		}
-		printf("-----------------------------------\n");
 		
 		strcpy(command, getTokenValue(DynArray_get(tokens, 0)) );
 		/*
@@ -196,16 +192,9 @@ int main(void)
 			{
 				setenv(DynArray_get(tokens,1), DynArray_get(tokens,2), 1);
 			}
-			else if ((number_token == 3 && (strcmp(getTokenValue(DynArray_get(tokens,2)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,2)),"<") == 0 \
-					|| strcmp(getTokenValue(DynArray_get(tokens,2)),">") == 0)) \
-					|| (number_token > 3 && (strcmp(getTokenValue(DynArray_get(tokens,3)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,3)),"<") == 0 \
-					|| strcmp(getTokenValue(DynArray_get(tokens,3)),">") == 0)))
-			{
-				fprintf(stderr,"Error: Cannot use piped command or file redirection with setenv\n");
-			}
 			else
 			{
-				fprintf(stderr,"Correct syntax is \"setenv $var [value]\"\n");
+				fprintf(stderr,"%s: setenv takes one or two parameters\n",SYSTEM_NAME);
 			}
 		} 
 		// unsetenv var: destroy the variable var.
@@ -216,13 +205,6 @@ int main(void)
 				&& strcmp(getTokenValue(DynArray_get(tokens,1)),">") != 0)
 			{
 				unsetenv(DynArray_get(tokens,1));
-			}
-			else if ((number_token == 2 && (strcmp(getTokenValue(DynArray_get(tokens,1)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,1)),"<") == 0 \
-					|| strcmp(getTokenValue(DynArray_get(tokens,1)),">") == 0)) \
-					|| (number_token > 2 && (strcmp(getTokenValue(DynArray_get(tokens,2)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,2)),"<") == 0 \
-					|| strcmp(getTokenValue(DynArray_get(tokens,2)),">") == 0)))
-			{
-				fprintf(stderr,"Error: Cannot use piped command or file redirection with unsetenv\n");
 			}
 			else
 			{

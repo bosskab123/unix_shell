@@ -14,6 +14,9 @@ void printNumberToken(void *pvItem, void *pvExtra);
    unused. */
 void printWordToken(void *pvItem, void *pvExtra);
 
+/* Return type of the token to caller */
+char * getTokenType(void *pvItem);
+
 /* Return value of the token to caller */
 char * getTokenValue(void *pvItem);
 
@@ -31,6 +34,6 @@ struct Token *makeToken(enum TokenType eTokenType,
 
 /* lexLine() uses a DFA approach.  It "reads" its characters from
    pcLine. */
-int lexLine(const char *pcLine, DynArray_T oTokens);
+int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg);
 
 #endif

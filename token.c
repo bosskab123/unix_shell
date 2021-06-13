@@ -18,7 +18,7 @@ enum {MAX_LINE_SIZE = 1024};
 
 enum {FALSE, TRUE};
 
-enum TokenType {TOKEN_WORD, TOKEN_PIPE, TOKEN_BG};
+enum TokenType {TOKEN_WORD, TOKEN_P, TOKEN_BG, TOKEN_RL, TOKEN_RR};
 
 /*--------------------------------------------------------------------*/
 
@@ -58,6 +58,18 @@ void printWordToken(void *pvItem, void *pvExtra)
    struct Token *psToken = (struct Token*)pvItem;
    if (psToken->eType == TOKEN_WORD)
       printf("%s ", psToken->pcValue);
+}
+
+/*--------------------------------------------------------------------*/
+
+char *getTokenType(void *pvItem)
+
+/* Return value of the token to caller */
+
+{
+	assert(pvItem != NULL);
+	struct Token *psToken = (struct Token*)pvItem;
+	return psToken->eType;
 }
 
 /*--------------------------------------------------------------------*/
@@ -104,7 +116,7 @@ struct Token *makeToken(enum TokenType eTokenType,
 
 /*--------------------------------------------------------------------*/
 
-int lexLine(const char *pcLine, DynArray_T oTokens)
+int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 
 /* Lexically analyze string pcLine.  Populate oTokens with the
    tokens that pcLine contains.  Return 1 (TRUE) if successful, or
@@ -145,19 +157,23 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 						psToken = makeToken(TOKEN_WORD, acValue);
 						if (psToken == NULL)
 						{
-							fprintf(stderr, "Cannot allocate memory\n");
+							strcpy(errMsg,"Cannot allocate memory");
 							return FALSE;
 						}
 						if (! DynArray_add(oTokens, psToken))
 						{
-							fprintf(stderr, "Cannot allocate memory\n");
+							strcpy(errMsg,"Cannot allocate memory");
 							return FALSE;
 						}
 						iValueIndex = 0;
 						
-						return TRUE;
+						goto ANALYZE;
 					}
-					else return FALSE;
+					else if(iLineIndex==0){
+						strcpy(errMsg,"");
+						return FALSE;
+					}
+					else goto ANALYZE;
 				}
 				else if (c == '"')
 			    {
@@ -165,6 +181,37 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 			    }
 			    else if (isspace(c))
 			       eState = STATE_START;
+			    else if (c == '&' || c == '|' || c == '>' || c == '<')
+				{
+					acValue[iValueIndex] = c;
+					switch c:
+						case '&': 
+							psToken = makeToken(TOKEN_BG, acValue);
+							break;
+						case '|': 
+							psToken = makeToken(TOKEN_P, acValue);
+							break;
+						case '<':
+							psToken = makeToken(TOKEN_RL, acValue);
+							break;
+						case '>':
+							psToken = makeToken(TOKEN_RR, acValue);
+							break;
+						default:
+							assert(FALSE);
+					if (psToken == NULL)
+					{
+						strcpy(errMsg,"Cannot allocate memory");
+						return FALSE;
+					}
+					if (! DynArray_add(oTokens, psToken))
+					{
+						strcpy(errMsg,"Cannot allocate memory");
+						return FALSE;
+					}
+					iValueIndex = 0;
+					eState = STATE_START;
+				}
 			    else
 			    {
 			       acValue[iValueIndex++] = c;
@@ -178,6 +225,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 					acValue[iValueIndex++] = c;
 					eState = STATE_IN_STRING;
 				}
+				else if(c == '\n' || )
 				else
 				{
 					eState = STATE_IN_WORD;
@@ -192,17 +240,17 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 					psToken = makeToken(TOKEN_WORD, acValue);
 					if (psToken == NULL)
 					{
-						fprintf(stderr, "Cannot allocate memory\n");
+						strcpy(errMsg,"Cannot allocate memory");
 						return FALSE;
 					}
 					if (! DynArray_add(oTokens, psToken))
 					{
-						fprintf(stderr, "Cannot allocate memory\n");
+						strcpy(errMsg,"Cannot allocate memory");
 						return FALSE;
 					}
 					iValueIndex = 0;
 					
-					return TRUE;
+					goto ANALYZE;
 				}
 				else if (c == '"')
 				{
@@ -215,16 +263,47 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 					psToken = makeToken(TOKEN_WORD, acValue);
 					if (psToken == NULL)
 					{
-						fprintf(stderr, "Cannot allocate memory\n");
+						strcpy(errMsg,"Cannot allocate memory");
 						return FALSE;
 					}
 					if (! DynArray_add(oTokens, psToken))
 					{
-						fprintf(stderr, "Cannot allocate memory\n");
+						strcpy(errMsg,"Cannot allocate memory");
 						return FALSE;
 					}
 					iValueIndex = 0;
 					
+					eState = STATE_START;
+				}
+				else if (c == '&' || c == '|' || c == '>' || c == '<')
+				{
+					acValue[iValueIndex] = c;
+					switch c:
+						case '&': 
+							psToken = makeToken(TOKEN_BG, acValue);
+							break;
+						case '|': 
+							psToken = makeToken(TOKEN_P, acValue);
+							break;
+						case '<':
+							psToken = makeToken(TOKEN_RL, acValue);
+							break;
+						case '>':
+							psToken = makeToken(TOKEN_RR, acValue);
+							break;
+						default:
+							assert(FALSE);
+					if (psToken == NULL)
+					{
+						strcpy(errMsg,"Cannot allocate memory");
+						return FALSE;
+					}
+					if (! DynArray_add(oTokens, psToken))
+					{
+						strcpy(errMsg,"Cannot allocate memory");
+						return FALSE;
+					}
+					iValueIndex = 0;
 					eState = STATE_START;
 				}
 				else
@@ -238,5 +317,53 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 				assert(FALSE);
 		}
 	}
+	
+	ANALYZE:
+		int num_token = DynArray_getLength(oTokens);
+		int i;
+		for(i=0;i<num_token;i++){
+			if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_BG && i!=num_token-1){
+				strcpy(errMsg,"Wrong Syntax using &");
+				return FALSE;
+			}
+			else if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RL ) {
+				if(i>0) {
+					if(getTokenType(DynArray_get(oTokens,i-1)) != TOKEN_WORD) {
+						strcpy(errMsg,"Pipe or redirection destination is not specified");
+						return FALSE;
+					}
+				}
+				else {
+					strcpy(errMsg,"Pipe or redirection destination is not specified");
+					return FALSE;
+				}
+			}
+			else if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RR ) {
+				if(i<num_token-1) {
+					if(getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
+						strcpy(errMsg,"Pipe or redirection destination is not specified");
+						return FALSE;
+					}
+				}
+				else {
+					strcpy(errMsg,"Pipe or redirection destination is not specified");
+					return FALSE;
+				}
+			}
+			else if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_P ) {
+				if(i>0 && i<num_token-1) {
+					if(getTokenType(DynArray_get(oTokens,i-1)) != TOKEN_WORD || getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
+						strcpy(errMsg,"Pipe or redirection destination is not specified");
+						return FALSE;
+					}
+				}
+				else {
+					strcpy(errMsg,"Pipe or redirection destination is not specified");
+					return FALSE;
+				}
+			}
+		}
+		return TRUE;
+	
 }
 
