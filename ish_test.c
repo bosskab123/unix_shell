@@ -163,6 +163,14 @@ int main(void)
 		if (!iSuccessful) printf("Something wrong!!\n");
 
 		number_token = DynArray_getLength(tokens);
+		
+		printf("-----------------------------------\n");
+		int a;
+		for(a=0;a<number_token;a++){
+			printf("token: (%s)\n",getTokenValue(DynArray_get(tokens,a)));
+		}
+		printf("-----------------------------------\n");
+		
 		strcpy(command, getTokenValue(DynArray_get(tokens, 0)) );
 		/*
 			There are 5 built-in commands: setenv, unsetenv, cd, exit, fg
@@ -283,7 +291,7 @@ int main(void)
 			
 			if( foreground == 1 ){
 				pid = wait(&status);
-				printf("child %d has returned\n", pid);
+				//printf("child %d has returned\n", pid);
 			}
 			
 			DynArray_map(tokens, freeToken, NULL);
