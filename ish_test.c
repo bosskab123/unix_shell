@@ -372,7 +372,7 @@ int main(void)
 //				setenv(DynArray_get(tokens,1), DynArray_get(tokens,2), 1);
 //			}
 //			else if ((number_token == 3 && (strcmp(getTokenValue(DynArray_get(tokens,2)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,2)),"<") == 0 
-//					|| strcmp(getTokenValue(DynArray_get(tokens,2)),">") == 0)) \
+//					|| strcmp(getTokenValue(DynArray_get(tokens,2)),">") == 0)) 
 //					|| (number_token > 3 && (strcmp(getTokenValue(DynArray_get(tokens,3)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,3)),"<") == 0 
 //					|| strcmp(getTokenValue(DynArray_get(tokens,3)),">") == 0)))
 //			{
@@ -386,14 +386,14 @@ int main(void)
 //		// unsetenv var: destroy the variable var.
 //		else if (strcmp(command, "unsetenv") == 0)
 //		{
-//			if (number_token == 2 && strcmp(getTokenValue(DynArray_get(tokens,1)),"") != 0 \
+//			if (number_token == 2 && strcmp(getTokenValue(DynArray_get(tokens,1)),"") != 0 
 //				&& strcmp(getTokenValue(DynArray_get(tokens,1)),"|") != 0 && strcmp(getTokenValue(DynArray_get(tokens,1)),"<") != 0 
 //				&& strcmp(getTokenValue(DynArray_get(tokens,1)),">") != 0)
 //			{
 //				unsetenv(DynArray_get(tokens,1));
 //			}
 //			else if ((number_token == 2 && (strcmp(getTokenValue(DynArray_get(tokens,1)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,1)),"<") == 0 
-//					|| strcmp(getTokenValue(DynArray_get(tokens,1)),">") == 0)) \
+//					|| strcmp(getTokenValue(DynArray_get(tokens,1)),">") == 0)) 
 //					|| (number_token > 2 && (strcmp(getTokenValue(DynArray_get(tokens,2)),"|") == 0 || strcmp(getTokenValue(DynArray_get(tokens,2)),"<") == 0 
 //					|| strcmp(getTokenValue(DynArray_get(tokens,2)),">") == 0)))
 //			{
