@@ -147,6 +147,7 @@ int main(void)
 		fprintf(stdout,"%% ");
 		line = fgets(acLine, MAX_LINE_SIZE, fd); 
 		if(line == NULL) continue;
+		printf("%s",acLine);
 		
 		// Tokenize string in acLine into token and save in tokens
 		iSuccessful = lexLine(acLine, tokens);
@@ -160,12 +161,7 @@ int main(void)
 			exit(EXIT_FAILURE);
 		}
 		
-		iBuiltIn = 1;
-		
-		// Print out the line 
-		printf("%% %s", acLine);
-		
-		
+		iBuiltIn = 1;		
 
 		number_token = DynArray_getLength(tokens);
 		
