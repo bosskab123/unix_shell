@@ -11,12 +11,14 @@ void ChildPID_terminate_handler(int iSig)
 
 void ChildPID_free(void *pvItem, void *pvExtra)
 {
+	assert(pvItem != NULL);
 	int *childPID = (int *)pvItem;
 	free(childPID);
 }
 
 DynArray_T ChildPID_init(int size)
 {
+	assert(size >= 0);
 	DynArray_T
 	cp = DynArray_new(size);
 	if (cp == NULL)
@@ -29,6 +31,7 @@ DynArray_T ChildPID_init(int size)
 
 void ChildPID_add(DynArray_T cp, int pid)
 {
+	assert(cp != NULL);
 	int *child_pid;
 	child_pid = (int *)malloc(sizeof(int));
 	*child_pid = pid;

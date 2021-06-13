@@ -40,6 +40,7 @@ void freeToken(void *pvItem, void *pvExtra)
 /* Free token pvItem.  pvExtra is unused. */
 
 {
+	assert(pvItem != NULL);
    struct Token *psToken = (struct Token*)pvItem;
    free(psToken->pcValue);
    free(psToken);
@@ -53,6 +54,7 @@ void printWordToken(void *pvItem, void *pvExtra)
    unused. */
 
 {
+	assert(pvItem != NULL);
    struct Token *psToken = (struct Token*)pvItem;
    if (psToken->eType == TOKEN_WORD)
       printf("%s ", psToken->pcValue);
@@ -65,6 +67,7 @@ char *getTokenValue(void *pvItem)
 /* Return value of the token to caller */
 
 {
+	assert(pvItem != NULL);
 	struct Token *psToken = (struct Token*)pvItem;
 	return psToken->pcValue;
 }

@@ -26,7 +26,8 @@
 #define MAX_PATH_SIZE 1024
 
 DynArray_T childPIDs;
-int iSuccessful, iBuiltIn, number_token;
+char **argv;
+int iSuccessful, iBuiltIn, number_token, number_argv;
 
 void SIGCHLD_handler(int iSig)
 {
@@ -257,11 +258,10 @@ int main(void)
 			else
 			{	
 				// Create a char array of token instead of using Dynamic array
-				int num_argv = DynArray_getLength(tokens);
-				char **argv;
-				argv = (char **)malloc(num_argv*sizeof(char *));
+				number_argv = DynArray_getLength(tokens);
+				argv = (char **)malloc(number_argv*sizeof(char *));
 				int i;
-				for(i=0;i<num_argv;i++){
+				for(i=0;i<number_argv;i++){
 					argv[i] = (char *)malloc(20*sizeof(char));
 					strcpy(argv[i],getTokenValue(DynArray_get(tokens,i)));
 				}
@@ -270,6 +270,12 @@ int main(void)
 				
 				// Create a process to handle with the program.
 				execvp(argv[0],argv);
+				
+				// If there is an error, print an error message and terminate the program.
+				for(i=0;i<number_argv;i++){
+					free(argv[i]);
+				}
+				free(argv);
 				fprintf(stderr,"Error for running %s\n", command);
 				exit(0);
 				
