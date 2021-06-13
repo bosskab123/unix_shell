@@ -148,7 +148,7 @@ int main(void)
 	{
 		// Tokenize string in acLine into token and save in tokens
 		iSuccessful = lexLine(acLine, tokens);
-		if (!iSuccessful) printf("Something wrong!!\n");
+		if (!iSuccessful) continue;
 		
 		// Allocate memory for tokens
 		tokens = DynArray_new(0);

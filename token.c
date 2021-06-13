@@ -157,7 +157,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens)
 						
 						return TRUE;
 					}
-					return TRUE;
+					else return FALSE;
 				}
 				else if (c == '"')
 			    {
