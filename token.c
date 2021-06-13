@@ -184,7 +184,6 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 			       eState = STATE_START;
 			    else if (c == '&' || c == '|' || c == '>' || c == '<')
 				{
-					printf("shoudkl\n");
 					acValue[iValueIndex] = c;
 					switch (c)
 					{
@@ -329,6 +328,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 	}
 	
 	ANALYZE:
+		printf("Pass here\n");
 		num_token = DynArray_getLength(oTokens);
 		int i;
 		for(i=0;i<num_token;i++){
