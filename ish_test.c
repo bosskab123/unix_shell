@@ -146,7 +146,9 @@ int main(void)
 	*/
 	while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
 	{
-		printf("acLine: (%s)\n",acLine);
+		// Tokenize string in acLine into token and save in tokens
+		iSuccessful = lexLine(acLine, tokens);
+		if (!iSuccessful) printf("Something wrong!!\n");
 		
 		// Allocate memory for tokens
 		tokens = DynArray_new(0);
@@ -161,9 +163,7 @@ int main(void)
 		// Print out the line 
 		printf("%% %s", acLine);
 		
-		// Tokenize string in acLine into token and save in tokens
-		iSuccessful = lexLine(acLine, tokens);
-		if (!iSuccessful) printf("Something wrong!!\n");
+		
 
 		number_token = DynArray_getLength(tokens);
 		
