@@ -266,7 +266,7 @@ int main(void)
 				DynArray_free(tokens);
 				
 				// Create a process to handle with the program.
-				execvp(argv[0],argv);
+				execvp(argv[0],argv,NULL);
 				
 				// If there is an error, print an error message and terminate the program.
 				for(i=0;i<number_argv;i++){
