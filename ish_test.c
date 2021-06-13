@@ -36,7 +36,7 @@ void SIGCHLD_handler(int iSig)
 	int iIndex = DynArray_search(childPIDs, &cpid, ChildPID_compare);
 	int *cp = DynArray_removeAt(childPIDs, iIndex);
 	free(cp);
-	
+	printf("child %d terminated normally\n", cpid);
 }
 
 void SIGINT_handler(int iSig)
@@ -146,9 +146,10 @@ int main(void)
 	*/
 	while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
 	{
-		iBuiltIn = 1;
-		// Print out the line 
-		printf("%% %s", acLine);
+		if(strcmp(acLine,"")==0){
+			fd = stdin;
+			continue;
+		}
 		
 		// Allocate memory for tokens
 		tokens = DynArray_new(0);
@@ -157,7 +158,12 @@ int main(void)
 			fprintf(stderr, "Cannot allocate memory\n");
 			exit(EXIT_FAILURE);
 		}
-
+		
+		iBuiltIn = 1;
+		
+		// Print out the line 
+		printf("%% %s", acLine);
+		
 		// Tokenize string in acLine into token and save in tokens
 		iSuccessful = lexLine(acLine, tokens);
 		if (!iSuccessful) printf("Something wrong!!\n");
@@ -291,7 +297,7 @@ int main(void)
 			
 			if( foreground == 1 ){
 				pid = wait(&status);
-				//printf("child %d has returned\n", pid);
+				
 			}
 			
 			DynArray_map(tokens, freeToken, NULL);
@@ -305,7 +311,7 @@ int main(void)
 	}
 	fclose(fd);
 	
-	DynArray_map(tokens, ChildPID_free, NULL);
+	DynArray_map(childPIDs, ChildPID_free, NULL);
 	DynArray_free(childPIDs);
 
 	return 0;
