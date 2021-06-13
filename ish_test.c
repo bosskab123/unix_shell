@@ -150,16 +150,20 @@ int main(void)
 		
 		if(fd != stdin) fprintf(stdout,"%% %s", acLine);
 		
-		// Tokenize string in acLine into token and save in tokens
-		iSuccessful = lexLine(acLine, tokens);
-		if (!iSuccessful) continue;
-		
 		// Allocate memory for tokens
 		tokens = DynArray_new(0);
 		if (tokens == NULL)
 		{
 			fprintf(stderr, "Cannot allocate memory\n");
 			exit(EXIT_FAILURE);
+		}
+		
+		// Tokenize string in acLine into token and save in tokens
+		iSuccessful = lexLine(acLine, tokens);
+		if (!iSuccessful) {
+			DynArray_map(tokens, freeToken, NULL);
+			DynArray_free(tokens);
+			continue;	
 		}
 		
 		iBuiltIn = 1;		
@@ -303,9 +307,7 @@ int main(void)
 		}
 		
 		DynArray_map(tokens, freeToken, NULL);
-		DynArray_free(tokens);
-		
-		
+		DynArray_free(tokens);		
 	} while(line != NULL);
 	if(fd != stdin)
 	{
