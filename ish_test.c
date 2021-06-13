@@ -144,16 +144,8 @@ int main(void)
 	/*
 		Read each line from the input stream and stored the tokenized string in tokens
 	*/
-	while (1)
+	LOOP:while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
 	{
-		printf("a\n");
-		if( fd != stdin && fgets(acLine, MAX_LINE_SIZE, fd) == NULL )
-		{
-			fclose(fd);
-			fd = stdin;
-			continue;
-		}
-		printf("b\n");
 		// Tokenize string in acLine into token and save in tokens
 		iSuccessful = lexLine(acLine, tokens);
 		if (!iSuccessful) continue;
@@ -314,7 +306,13 @@ int main(void)
 		DynArray_map(tokens, freeToken, NULL);
 		DynArray_free(tokens);
 	}
-	fclose(fd);
+	if(fd != stdin)
+	{
+		fclose(fd);
+		fd = stdin;
+		goto LOOP;
+	}
+	
 	
 	DynArray_map(childPIDs, ChildPID_free, NULL);
 	DynArray_free(childPIDs);
