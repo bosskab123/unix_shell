@@ -327,7 +327,8 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 	}
 	
 	ANALYZE:
-		int num_token = DynArray_getLength(oTokens);
+		int num_token;
+		num_token = DynArray_getLength(oTokens);
 		int i;
 		for(i=0;i<num_token;i++){
 			if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_BG && i!=num_token-1){
