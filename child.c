@@ -1,4 +1,5 @@
 #include <stdio.h>
+#incluse <assert.h>
 #include "dynarray.h"
 #include <stdlib.h>
 #include <unistd.h>
