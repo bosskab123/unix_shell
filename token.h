@@ -1,7 +1,7 @@
 #ifndef TOKEN_INCLUDED
 #define TOKEN_INCLUDED
 
-enum TokenType {TOKEN_STRING, TOKEN_WORD, TOKEN_PIPE, TOKEN_BG};
+enum TokenType {TOKEN_WORD, TOKEN_P, TOKEN_BG, TOKEN_RL, TOKEN_RR};
 
 /* Free token pvItem.  pvExtra is unused. */
 void freeToken(void *pvItem, void *pvExtra);
@@ -15,7 +15,7 @@ void printNumberToken(void *pvItem, void *pvExtra);
 void printWordToken(void *pvItem, void *pvExtra);
 
 /* Return type of the token to caller */
-char * getTokenType(void *pvItem);
+enum TokenType getTokenType(void *pvItem);
 
 /* Return value of the token to caller */
 char * getTokenValue(void *pvItem);

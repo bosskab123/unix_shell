@@ -32,7 +32,7 @@ int iSuccessful, iBuiltIn, number_token, number_argv;
 
 void SIGCHLD_handler(int iSig)
 {
-	int cpid = wait();
+	int cpid = wait(NULL);
 	if(cpid == -1) return;
 	
 	int iIndex = DynArray_search(childPIDs, &cpid, ChildPID_compare);

@@ -62,7 +62,7 @@ void printWordToken(void *pvItem, void *pvExtra)
 
 /*--------------------------------------------------------------------*/
 
-char *getTokenType(void *pvItem)
+enum TokenType getTokenType(void *pvItem)
 
 /* Return value of the token to caller */
 
@@ -184,7 +184,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 			    else if (c == '&' || c == '|' || c == '>' || c == '<')
 				{
 					acValue[iValueIndex] = c;
-					switch c:
+					switch (c):
 						case '&': 
 							psToken = makeToken(TOKEN_BG, acValue);
 							break;
@@ -225,7 +225,11 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 					acValue[iValueIndex++] = c;
 					eState = STATE_IN_STRING;
 				}
-				else if(c == '\n' || )
+				else if(c == '\n' || c == '\0')
+				{
+					strcpy(errMsg,"Could not find quote pair");
+					return FALSE;
+				}
 				else
 				{
 					eState = STATE_IN_WORD;
@@ -278,7 +282,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 				else if (c == '&' || c == '|' || c == '>' || c == '<')
 				{
 					acValue[iValueIndex] = c;
-					switch c:
+					switch (c):
 						case '&': 
 							psToken = makeToken(TOKEN_BG, acValue);
 							break;
