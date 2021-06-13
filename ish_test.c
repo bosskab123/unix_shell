@@ -144,8 +144,14 @@ int main(void)
 	/*
 		Read each line from the input stream and stored the tokenized string in tokens
 	*/
-	while (fgets(acLine, MAX_LINE_SIZE, fd) != NULL)
+	while (1)
 	{
+		if( fd != stdin && fgets(acLine, MAX_LINE_SIZE, fd) == NULL )
+		{
+			fclose(fd);
+			fd = stdin;
+			continue;
+		}
 		// Tokenize string in acLine into token and save in tokens
 		iSuccessful = lexLine(acLine, tokens);
 		if (!iSuccessful) continue;
