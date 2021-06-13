@@ -328,11 +328,10 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 	}
 	
 	ANALYZE:
-		printf("Pass here\n");
 		num_token = DynArray_getLength(oTokens);
 		int i;
 		for(i=0;i<num_token;i++){
-			if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_BG && i!=num_token-1){
+			if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_BG && (i!=num_token-1 || i == 0) ){
 				strcpy(errMsg,"Wrong Syntax using &");
 				return FALSE;
 			}
