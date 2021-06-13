@@ -146,12 +146,14 @@ int main(void)
 	*/
 	while (1)
 	{
+		printf("a\n");
 		if( fd != stdin && fgets(acLine, MAX_LINE_SIZE, fd) == NULL )
 		{
 			fclose(fd);
 			fd = stdin;
 			continue;
 		}
+		printf("b\n");
 		// Tokenize string in acLine into token and save in tokens
 		iSuccessful = lexLine(acLine, tokens);
 		if (!iSuccessful) continue;
