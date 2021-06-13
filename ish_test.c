@@ -146,9 +146,9 @@ int main(void)
 		
 		if(fd == stdin) fprintf(stdout,"%% ");
 		line = fgets(acLine, MAX_LINE_SIZE, fd); 
-		if(line == NULL || strlen(acLine)==0) continue;
+		if(line == NULL) continue;
 		
-		if(fd != stdin) fprintf(stdout,"%% (%s)",acLine);
+		if(fd != stdin) fprintf(stdout,"%% ",acLine);
 		printf("%s",acLine);
 		
 		// Tokenize string in acLine into token and save in tokens
