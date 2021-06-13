@@ -184,7 +184,8 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 			    else if (c == '&' || c == '|' || c == '>' || c == '<')
 				{
 					acValue[iValueIndex] = c;
-					switch (c):
+					switch (c)
+					{
 						case '&': 
 							psToken = makeToken(TOKEN_BG, acValue);
 							break;
@@ -199,6 +200,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 							break;
 						default:
 							assert(FALSE);
+					}
 					if (psToken == NULL)
 					{
 						strcpy(errMsg,"Cannot allocate memory");
@@ -282,7 +284,8 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 				else if (c == '&' || c == '|' || c == '>' || c == '<')
 				{
 					acValue[iValueIndex] = c;
-					switch (c):
+					switch (c)
+					{
 						case '&': 
 							psToken = makeToken(TOKEN_BG, acValue);
 							break;
@@ -297,6 +300,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 							break;
 						default:
 							assert(FALSE);
+					}
 					if (psToken == NULL)
 					{
 						strcpy(errMsg,"Cannot allocate memory");
