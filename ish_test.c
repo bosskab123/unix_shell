@@ -144,9 +144,9 @@ int main(void)
 	
 	LOOP:do{
 		
-		if(fd == stdin) fprintf(stdout,"%% 1");
+		if(fd == stdin) fprintf(stdout,"%% ");
 		line = fgets(acLine, MAX_LINE_SIZE, fd); 
-		if(line == NULL) continue;
+		if(line == NULL || strlen(acLine)==0) continue;
 		
 		if(fd != stdin) fprintf(stdout,"%% ");
 		printf("%s",acLine);
