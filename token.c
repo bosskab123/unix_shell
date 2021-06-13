@@ -335,31 +335,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 				strcpy(errMsg,"Wrong Syntax using &");
 				return FALSE;
 			}
-			else if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RL ) {
-				if(i>0) {
-					if(getTokenType(DynArray_get(oTokens,i-1)) != TOKEN_WORD) {
-						strcpy(errMsg,"Pipe or redirection destination is not specified");
-						return FALSE;
-					}
-				}
-				else {
-					strcpy(errMsg,"Pipe or redirection destination is not specified");
-					return FALSE;
-				}
-			}
-			else if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RR ) {
-				if(i<num_token-1) {
-					if(getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
-						strcpy(errMsg,"Pipe or redirection destination is not specified");
-						return FALSE;
-					}
-				}
-				else {
-					strcpy(errMsg,"Pipe or redirection destination is not specified");
-					return FALSE;
-				}
-			}
-			else if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_P ) {
+			else if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_P || getTokenType(DynArray_get(oTokens,i)) == TOKEN_RR || getTokenType(DynArray_get(oTokens,i)) == TOKEN_RL) {
 				if(i>0 && i<num_token-1) {
 					if(getTokenType(DynArray_get(oTokens,i-1)) != TOKEN_WORD || getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
 						strcpy(errMsg,"Pipe or redirection destination is not specified");
