@@ -144,9 +144,11 @@ int main(void)
 	
 	LOOP:do{
 		
-		fprintf(stdout,"%% ");
+		if(fd == stdin) fprintf(stdout,"%% ");
 		line = fgets(acLine, MAX_LINE_SIZE, fd); 
 		if(line == NULL) continue;
+		
+		if(fd != stdin) fprintf(stdout,"%% ");
 		printf("%s",acLine);
 		
 		// Tokenize string in acLine into token and save in tokens
