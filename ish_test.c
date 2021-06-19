@@ -176,13 +176,13 @@ int main(void)
 		iBuiltIn = 1;
 		number_token = DynArray_getLength(tokens);
 		
-		/*
+		
 		// Special purpose: To check the generated tokens
 		int it;
 		for(it=0;it<number_token;it++){
 			printf("Token %d: (%s)\n",it,getTokenValue(DynArray_get(tokens,it)));
 		}
-		*/
+		
 
 		strcpy(command, getTokenValue(DynArray_get(tokens, 0)) );
 		/*
