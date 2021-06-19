@@ -152,8 +152,6 @@ int main(void)
 		if(fd == stdin) fprintf(stdout,"%% ");
 		line = fgets(acLine, MAX_LINE_SIZE, fd); 
 		if(line == NULL) continue;
-		
-		printf("It's back\n");
 
 		if(fd != stdin) fprintf(stdout,"%% %s", acLine);
 		fflush(NULL);

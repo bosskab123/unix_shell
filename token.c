@@ -170,7 +170,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 						
 						goto ANALYZE;
 					}
-					else if(iLineIndex==0){
+					else if(iLineIndex==1){
 						strcpy(errMsg,"");
 						return FALSE;
 					}
