@@ -273,7 +273,7 @@ int main(void)
 			}
 			else
 			{	
-				int i,j, nRL = 0, nRR = 0;
+				int i,j;
 				number_argv = 0;
 				for(i=0;i<number_token;i++){
 					switch(getTokenType(DynArray_get(tokens,i))){
@@ -283,16 +283,18 @@ int main(void)
 
 						case TOKEN_BG:
 							break;
-							
+
 						case TOKEN_P:
 							
 							break;
 
 						case TOKEN_RL:
-							char *filename = getTokenValue(DynArray_get(tokens,i-1));
+							char *filename;
+							filename = getTokenValue(DynArray_get(tokens,i-1));
 							// If the file exists, redirect stdout to that file.
 							// If not, create the file with permission 0600 and redirect to that file.
-							int fi = open(filename, O_RDONLY, 0600);
+							int fi;
+							fi = open(filename, O_RDONLY, 0600);
 							if(fi == -1){
 								fprintf(stderr,"%s: no such file or directory\n", filename);
 								DynArray_map(tokens, freeToken, NULL);
@@ -305,13 +307,15 @@ int main(void)
 							break;
 
 						case TOKEN_RR:
-							char *filename = getTokenValue(DynArray_get(tokens,i+1));
+							char *filename;
+							filename = getTokenValue(DynArray_get(tokens,i+1));
 							// If the file exists, redirect stdout to that file.
 							// If not, create the file with permission 0600 and redirect to that file.
-							int fo = open(filename, O_WRONLY | O_CREAT, 0600);
+							int fo;
+							fo = open(filename, O_WRONLY | O_CREAT, 0600);
 							close(1);
-							dup(fd);
-							close(fd);
+							dup(fo);
+							close(fo);
 							break;
 					}
 				}
