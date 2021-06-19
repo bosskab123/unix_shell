@@ -45,6 +45,7 @@ void SIGINT_handler(int iSig)
 {
 	/* Send SIGINT to children */
 	int childPID_length = DynArray_getLength(childPIDs);
+	printf("length = %d\n",childPID_length);
 	int i;
 	for(i=0;i<childPID_length;i++){
 		int *cpid = (int *)DynArray_get(childPIDs,i);
@@ -201,7 +202,6 @@ int main(void)
 			else if (number_token == 3 && strcmp(getTokenValue(DynArray_get(tokens,2)),"|") != 0 \
 					&& strcmp(getTokenValue(DynArray_get(tokens,2)),"<") != 0 && strcmp(getTokenValue(DynArray_get(tokens,2)),">") != 0)
 			{
-				printf("===========\n==============\n");
 				setenv(getTokenValue(DynArray_get(tokens,1)), getTokenValue(DynArray_get(tokens,2)), 1);
 			}
 			else
