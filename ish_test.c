@@ -178,8 +178,8 @@ int main(void)
 			exit(EXIT_FAILURE);
 		}
 		
-		// Tokenize string in acLine into token and save in tokens
-		
+		/* Tokenize string in acLine into token and save in tokens
+			It also checks correctness of the syntax. */
 		iSuccessful = lexLine(acLine, tokens, errMsg);
 		if (!iSuccessful) {
 			DynArray_map(tokens, freeToken, NULL);
@@ -249,6 +249,10 @@ int main(void)
 		 When there are multiple programs running in the background, it will bring the most recently launched program to the foreground. */
 		else if (strcmp(command, "fg") == 0)
 		{
+			if(ChildPID_getLength(childPIDs) == 0){
+				fprintf(stdout,"%s: There is no background process.\n");
+				goto CLEANUP;
+			}
 			int lastChild = ChildPID_get(childPIDs, ChildPID_getLength(childPIDs) - 1);
 			fprintf(stdout,"[%d] Lastest background process is executing\n", lastChild);
 			int pid = waitpid(lastChild,&status,0);
@@ -274,19 +278,6 @@ int main(void)
 			int *p;
 			totalComm = Token_getNumCommand(tokens);
 
-			/* Check each command set and total number of command */
-			// printf("================\n");
-			// printf("totalComm: %d\n", totalComm);
-			// for(i=0;i<totalComm;i++){
-			// 	int num_argv;
-			// 	argv = Token_getComm(tokens,i,&num_argv);
-			// 	for(j=0;j<num_argv;j++){
-			// 		printf("(%s) ",argv[j]);
-			// 	}
-			// 	printf("\n");
-			// }
-			// printf("================\n");
-
 			// TotalComm > 1 means There is at least one pipe
 			if(totalComm > 1)
 			{
@@ -300,6 +291,9 @@ int main(void)
 				}
 			}
 
+			/* Iterate through each command in a line
+				Create a process for each command from parent process. So, they all are at the same level.
+				Then, create pipes for number of total commands - 1 and link them via pipes.*/
 			for(i=0;i<totalComm;i++)
 			{
 				pid = fork();
@@ -308,10 +302,10 @@ int main(void)
 				{
 					int file_descriptor;
 					char *filename;
-					/* Redirect stdin if any for the first process*/
+					/* Redirect a file descriptor as stdin, if any, for the first process*/
 					if(i==0)
 					{
-						/* open file from redirection if any */
+						/* Open file from redirection, if any */
 						filename = (char *)malloc(50 * sizeof(filename));
 						tokens = Token_getInput(tokens,filename,&status);
 						if(status == 0)
@@ -412,9 +406,9 @@ int main(void)
 			
 			continue;
 		}
-		
-		DynArray_map(tokens, freeToken, NULL);
-		DynArray_free(tokens);		
+		CLEANUP:
+			DynArray_map(tokens, freeToken, NULL);
+			DynArray_free(tokens);		
 	} while(line != NULL);
 	if(fd != stdin)
 	{
