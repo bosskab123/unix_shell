@@ -477,7 +477,7 @@ DynArray_T Token_getInput(DynArray_T oTokens, char *filename)
 	return oTokens;
 }
 
-DynArray_T Token_getOutput(DynArray_T oTokens, char **filename)
+DynArray_T Token_getOutput(DynArray_T oTokens, char *filename)
 {
 	assert(oTokens != NULL);
 	
