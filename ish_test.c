@@ -343,13 +343,13 @@ int main(void)
 							}
 						}
 
-					 	argv = Token_getComm(tokens,i,&num_argv);
+					 	argv = Token_getComm(tokens,i,&number_argv);
 
 						// Create a char array of token instead of using Dynamic array
 						execvp(argv[0],argv);
 						fprintf(stderr,"%s: no such file or directory\n",command);
-						for(i=0;i<number_argv;i++){
-							free(argv[i]);
+						for(j=0;j<number_argv+1;j++){
+							free(argv[j]);
 						}
 						free(argv);
 						exit(EXIT_FAILURE);
