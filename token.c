@@ -128,7 +128,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
    pcLine. */
 
 {
-   enum LexState {STATE_START, STATE_IN_WORD, STATE_IN_STRING};
+   enum LexState {STATE_START, STATE_IN_WORD, STATE_IN_STRINGONE, STATE_IN_STRINGTWO};
 
    enum LexState eState = STATE_START;
 
@@ -176,10 +176,14 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 					}
 					else goto ANALYZE;
 				}
-				else if (c == '"')
+				else if (c == '\'')
 			    {
-			       eState = STATE_IN_STRING;
+			       eState = STATE_IN_STRINGONE;
 			    }
+				else if (c == '"')
+				{
+					eState = STATE_IN_STRINGTWO;
+				}
 			    else if (isspace(c))
 			       eState = STATE_START;
 			    else if (c == '&' || c == '|' || c == '>' || c == '<')
@@ -222,7 +226,24 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 			    }
 			    break;
 			
-			case STATE_IN_STRING:
+			case STATE_IN_STRINGONE:
+				if(c == '\n' || c == '\0')
+				{
+					strcpy(errMsg,"Could not find quote pair");
+					return FALSE;
+				}
+				else if(c != '\'')
+				{
+					acValue[iValueIndex++] = c;
+					eState = STATE_IN_STRINGONE;
+				}
+				else
+				{
+					eState = STATE_IN_WORD;
+				}
+				break;
+			
+			case STATE_IN_STRINGTWO:
 				if(c == '\n' || c == '\0')
 				{
 					strcpy(errMsg,"Could not find quote pair");
@@ -231,14 +252,14 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 				else if(c != '"')
 				{
 					acValue[iValueIndex++] = c;
-					eState = STATE_IN_STRING;
+					eState = STATE_IN_STRINGTWO;
 				}
 				else
 				{
 					eState = STATE_IN_WORD;
 				}
 				break;
-			
+
 			case STATE_IN_WORD:
 				if ((c == '\n') || (c == '\0'))
 				{
