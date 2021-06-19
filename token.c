@@ -461,27 +461,33 @@ DynArray_T Token_isBG(DynArray_T oTokens, int *status)
 	return oTokens;
 }
 
-char *Token_getInput(DynArray_T oTokens)
+DynArray_T Token_getInput(DynArray_T oTokens, char **filename)
 {
 	assert(oTokens != NULL);
 	
 	int i,length;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
-		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RL) return getTokenValue(DynArray_get(oTokens,i+1));
+		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RL){
+			DynArray_removeAt(oTokens,i);
+			strcpy(*filename, getTokenValue(DynArray_get(oTokens,i+1)));
+		}
 	}
 	
 	return NULL;
 }
 
-char *Token_getOutput(DynArray_T oTokens)
+DynArray_T Token_getOutput(DynArray_T oTokens, char **filename)
 {
 	assert(oTokens != NULL);
 	
 	int i,length;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
-		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RR) return getTokenValue(DynArray_get(oTokens,i+1));
+		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RR){
+			DynArray_removeAt(oTokens,i);
+			strcpy(*filename, getTokenValue(DynArray_get(oTokens,i+1)));
+		}
 	}
 	
 	return NULL;

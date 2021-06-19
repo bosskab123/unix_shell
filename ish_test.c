@@ -310,7 +310,7 @@ int main(void)
 						/* Redirect stdin if any for the first process*/
 						if(i==0)
 						{
-							filename = Token_getInput(tokens);
+							tokens = Token_getInput(tokens,&filename);
 							if(filename != NULL)
 							{
 								file_descriptor = open(filename, O_RDONLY);
@@ -326,9 +326,9 @@ int main(void)
 						}
 
 						/* Redirect stdout if any */
-						else if(i==totalComm-1)
+						if(i==totalComm-1)
 						{
-							filename = Token_getOutput(tokens);
+							tokens = Token_getOutput(tokens,&filename);
 							if(filename != NULL)
 							{
 								file_descriptor = open(filename, O_WRONLY | O_CREAT, 0600);
