@@ -1,20 +1,34 @@
 #ifndef CHILD_INCLUDED
 #define CHILD_INCLUDED
 
-void ChildPID_terminate_handler(int iSig);
+enum ProcessType { PROCESS_BG, PROCESS_FG };
 
-DynArray_T ChildPID_init(int size);
+void freeProcess(void *pvItem, void *pvExtra);
 
-int ChildPID_getLength(DynArray_T cp);
+enum ProcessType Process_getType(void *pvItem);
 
-int ChildPID_get(DynArray_T cp, int index);
+int Process_getpid(void *pvItem);
 
-void ChildPID_add(DynArray_T cp, int pid);
+struct Token *makeProcess(enum ProcessType eProcessType, int pid);
 
-void ChildPID_delete(DynArray_T cp, int pid);
+DynArray_T Process_init(int size);
 
-int ChildPID_compare(const void *pid1, const void *pid2);
+int Process_getLastbg(DynArray_T p);
 
-void ChildPID_free(void *pvItem, void *pvExtra);
+void Process_terminate(DynArray_T p, int pid);
+
+// DynArray_T ChildPID_init(int size);
+
+// int ChildPID_getLength(DynArray_T cp);
+
+// int ChildPID_get(DynArray_T cp, int index);
+
+// void ChildPID_add(DynArray_T cp, int pid);
+
+// void ChildPID_delete(DynArray_T cp, int pid);
+
+// int ChildPID_compare(const void *pid1, const void *pid2);
+
+// void ChildPID_free(void *pvItem, void *pvExtra);
 
 #endif

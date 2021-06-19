@@ -48,20 +48,6 @@ void freeToken(void *pvItem, void *pvExtra)
 
 /*--------------------------------------------------------------------*/
 
-void printWordToken(void *pvItem, void *pvExtra)
-
-/* Print token pvItem to stdout iff it is a word.  pvExtra is
-   unused. */
-
-{
-	assert(pvItem != NULL);
-   struct Token *psToken = (struct Token*)pvItem;
-   if (psToken->eType == TOKEN_WORD)
-      printf("%s ", psToken->pcValue);
-}
-
-/*--------------------------------------------------------------------*/
-
 enum TokenType Token_getType(void *pvItem)
 
 /* Return value of the token to caller */
@@ -455,53 +441,57 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 	
 }
 
-DynArray_T Token_isBG(DynArray_T oTokens, int *status)
+int Token_isBG(DynArray_T oTokens)
 {
 	int number_token = DynArray_getLength(oTokens);
-	*status = 1;
+	int status = 1;
 	if( Token_getType(DynArray_get(oTokens,number_token-1)) == TOKEN_BG ){
-		*status = 0;
+		status = 0;
 		DynArray_removeAt(oTokens,number_token-1);
 	}
-	return oTokens;
+	return status;
 }
 
-DynArray_T Token_getInput(DynArray_T oTokens, char *filename, int *status)
+char *Token_getInput(DynArray_T oTokens, int *status)
 {
 	assert(oTokens != NULL);
 	
 	int i,length;
+	char *filename;
 	*status = -1;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
 		if(Token_getType(DynArray_get(oTokens,i)) == TOKEN_RL){
-			strcpy(filename,Token_getValue(DynArray_get(oTokens,i+1)));
 			*status = 0;
+			filename = (char *)malloc(100*sizeof(char));
+			strcpy(filename,Token_getValue(DynArray_get(oTokens,i+1)));
 			DynArray_removeAt(oTokens,i);
 			DynArray_removeAt(oTokens,i);
-			return oTokens;
+			return filename;
 		}
 	}
-	return oTokens;
+	return filename;
 }
 
-DynArray_T Token_getOutput(DynArray_T oTokens, char *filename, int *status)
+char *Token_getOutput(DynArray_T oTokens, char *filename, int *status)
 {
 	assert(oTokens != NULL);
 	
 	int i,length;
+	char *filename;
 	*status = -1;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
 		if(Token_getType(DynArray_get(oTokens,i)) == TOKEN_RR){
-			strcpy(filename,Token_getValue(DynArray_get(oTokens,i+1)));
 			*status = 0;
+			filename = (char *)malloc(100*sizeof(char));
+			strcpy(filename,Token_getValue(DynArray_get(oTokens,i+1)));
 			DynArray_removeAt(oTokens,i);
 			DynArray_removeAt(oTokens,i);
-			return oTokens;
+			return filename;
 		}
 	}
-	return oTokens;
+	return filename;
 }
 
 int Token_getNumCommand(DynArray_T oTokens)

@@ -39,13 +39,13 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg);
 /* Check if this set of tokens is a background process (end with &) 
    And eliminate the '&' out grom the array
 */
-DynArray_T Token_isBG(DynArray_T oTokens, int *status);
+int Token_isBG(DynArray_T oTokens);
 
 /* Get input file descriptor */
-DynArray_T Token_getInput(DynArray_T oTokens, char *filename, int *status);
+char *Token_getInput(DynArray_T oTokens, int *status);
 
 /* Get output file descriptor */
-DynArray_T Token_getOutput(DynArray_T oTokens, char *filename, int * status);
+char *Token_getOutput(DynArray_T oTokens, char *filename, int *status);
 
 /* Get the total number of command in a set of tokens*/
 int Token_getNumCommand(DynArray_T oTokens);

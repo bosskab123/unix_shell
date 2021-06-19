@@ -27,34 +27,40 @@
 #define MAX_PATH_SIZE 1024
 #define SYSTEM_NAME "./ish"
 
-DynArray_T childPIDs;
+DynArray_T processes;
 DynArray_T tokens;
 char *errMsg;
 char **argv;
 int number_token, number_argv, totalComm;
 int *numArgv_each_Comm;
 
-/* SIGCHLD_handler is to reap child process after they are exited and remove the process ID from child process ID list */
+/* SIGCHLD_handler is to reap child process after they are exited and remove the process ID from child process ID list
+	and print out the process id */
 void SIGCHLD_handler(int iSig)
 {
 	int cpid = wait(NULL);
 	if(cpid == -1) return;
-	
-	int iIndex = DynArray_search(childPIDs, &cpid, ChildPID_compare);
-	ChildPID_delete(childPIDs, iIndex);
-
-	printf("child %d terminated normally\n", cpid);
+	else
+	{
+		if(Process_getType(DynArray_get(processes)) == PROCESS_BG)
+		{
+			Process_terminate(processes,cpid);
+			fprintf(stdout,"child %d terminated normally\n", cpid);
+			fflush(NULL);
+		}
+		else if(Process_getType(DynArray_get(processes)) == PROCESS_FG) Process_terminate(processes,cpid);
+	}
 }
 
 /* Parent ignore SIGINT signal but children response to it by their behaviour */
 void SIGINT_handler(int iSig)
 {
 	/* Send SIGINT to children */
-	int childPID_length = DynArray_getLength(childPIDs);
-	int i;
+	int childPID_length = DynArray_getLength(processes);
+	int i,pid;
 	for(i=0;i<childPID_length;i++){
-		int *cpid = (int *)DynArray_get(childPIDs,i);
-		kill( *cpid, SIGINT );
+		pid = Process_getpid(DynArray_get(processes,i));
+		kill( pid, SIGINT );
 	}
 }
 
@@ -64,7 +70,7 @@ void SIGQUIT_handler2(int iSig)
 	exit(0);
 }
 
-
+/* When SIGQUIT is received, a message for confirmation by sending SIGQUIT again within 5 seconds to exit the program */
 void SIGQUIT_handler1(int iSig)
 {
 	
@@ -79,7 +85,7 @@ void SIGQUIT_handler1(int iSig)
 	signal(SIGQUIT, SIGQUIT_handler2);
 	alarm(5);
 	
-	/* Send SIGINT to children */
+	/* Send SIGQUIT to children */
 	int childPID_length = DynArray_getLength(childPIDs);
 	int i;
 	for(i=0;i<childPID_length;i++){
@@ -129,10 +135,10 @@ int main(void)
 	errMsg = (char *)malloc(50*sizeof(char));
 
 	/*
-		initiate child process storage
+		initiate process array
 	*/
-	childPIDs = ChildPID_init(0);
-	
+	processes = Process_init(0); 
+
 	/*
 		Setup signal handler for each signal
 	*/
@@ -249,17 +255,15 @@ int main(void)
 		 When there are multiple programs running in the background, it will bring the most recently launched program to the foreground. */
 		else if (strcmp(command, "fg") == 0)
 		{
-			if(ChildPID_getLength(childPIDs) == 0){
-				fprintf(stdout,"%s: There is no background process.\n", SYSTEM_NAME);
-				goto CLEANUP;
+			int lastpid = Process_getLastbg(processes);
+			if(lastpid != -1){
+				fprintf(stdout, "[%d] Lastest background process is executing\n", lastpid);
+				waitpid(lastpid,&status,0);
+				fprintf(stdout, "[%d] Done\n", lastpid);
+				Process_terminate(processes,lastpid);
 			}
-			int lastChild = ChildPID_get(childPIDs, ChildPID_getLength(childPIDs) - 1);
-			fprintf(stdout,"[%d] Lastest background process is executing\n", lastChild);
-			int pid = waitpid(lastChild,&status,0);
-			if(pid == -1) perror("waitpid");
-			else {
-				fprintf(stdout,"[%d] Done\n", lastChild);
-				ChildPID_delete(childPIDs, pid);
+			else{
+				fprintf(stdout, "%s: There is no background process.\n", SYSTEM_NAME);
 			}
 		}
 		else iBuiltIn = 0;
@@ -271,10 +275,10 @@ int main(void)
 			
 			// Check if it is foreground or background
 			int foreground;
-			tokens = Token_isBG(tokens,&foreground);
+			foreground = Token_isBG(tokens);
 			
 			// Fork child process to do the command
-			int pid = 1, i, j;
+			int pid, i, j;
 			int *p;
 			totalComm = Token_getNumCommand(tokens);
 
@@ -297,8 +301,7 @@ int main(void)
 			for(i=0;i<totalComm;i++)
 			{
 				pid = fork();
-				if(pid > 0) ChildPID_add(childPIDs, pid);
-				else if(pid == 0)
+				if(pid == 0)
 				{
 					// int file_descriptor;
 					// char *filename;
@@ -306,8 +309,7 @@ int main(void)
 					// if(i==0)
 					// {
 					// 	/* Open file from redirection, if any */
-					// 	filename = (char *)malloc(50 * sizeof(filename));
-					// 	tokens = Token_getInput(tokens,filename,&status);
+					// 	filename = Token_getInput(tokens,&status);
 					// 	if(status == 0)
 					// 	{
 					// 		file_descriptor = open(filename, O_RDONLY);
@@ -326,8 +328,7 @@ int main(void)
 					// /* Redirect stdout if any */
 					// if(i == totalComm-1)
 					// {
-					// 	filename = (char *)malloc(50 * sizeof(filename));
-					// 	tokens = Token_getOutput(tokens,filename,&status);
+					// 	filename = Token_getOutput(tokens,&status);
 					// 	if(status == 0)
 					// 	{
 					// 		file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
@@ -375,6 +376,11 @@ int main(void)
 					fprintf(stderr, "%s: %s\n", argv[0], strerror(errno));
 					exit(EXIT_FAILURE);
 				}
+				else if(pid > 0)
+				{
+					if(foreground == 1) Process_add(processes, pid, PROCESS_FG);
+					else Process_add(processes, pid, PROCESS_BG);
+				}
 				else 
 				{
 					perror("fork");
@@ -395,8 +401,6 @@ int main(void)
 				for(i=0;i<totalComm;i++)
 				{
 					pid = wait(&status);
-					if(pid == -1) perror("wait");
-					else ChildPID_delete(childPIDs, pid);
 				}
 			}
 			// So there is no action for background
@@ -418,8 +422,6 @@ int main(void)
 	}
 	
 	free(errMsg);
-	DynArray_map(childPIDs, ChildPID_free, NULL);
-	DynArray_free(childPIDs);
 
 	return 0;
 }
