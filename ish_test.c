@@ -378,6 +378,8 @@ int main(void)
 					argv = Token_getComm(tokens,i,&number_argv);
 					fflush(NULL);
 					// Create a char array of token instead of using Dynamic array
+					printf("==== %d ====\n",i);
+					for(j=0;j<number_argv;j++) printf("argv[%d]: (%s)\n",j,argv[j]);
 					execvp(argv[0],argv);
 					fprintf(stderr, "%s: %s\n", argv[0], strerror(errno));
 					exit(EXIT_FAILURE);
