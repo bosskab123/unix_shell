@@ -470,7 +470,7 @@ DynArray_T Token_getInput(DynArray_T oTokens, char **filename)
 	for(i=0;i<length;i++){
 		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RL){
 			strcpy(*filename, getTokenValue(DynArray_get(oTokens,i+1)));
-			//DynArray_removeAt(oTokens,i);
+			DynArray_removeAt(oTokens,i);
 			return oTokens;
 		}
 	}
@@ -486,7 +486,7 @@ DynArray_T Token_getOutput(DynArray_T oTokens, char **filename)
 	for(i=0;i<length;i++){
 		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RR){
 			strcpy(*filename, getTokenValue(DynArray_get(oTokens,i+1)));
-			//DynArray_removeAt(oTokens,i);
+			DynArray_removeAt(oTokens,i);
 			return oTokens;
 		}
 	}
