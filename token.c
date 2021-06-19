@@ -188,7 +188,8 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 			       eState = STATE_START;
 			    else if (c == '&' || c == '|' || c == '>' || c == '<')
 				{
-					acValue[iValueIndex] = c;
+					acValue[iValueIndex++] = c;
+					acValue[iValueIndex++] = '\0';
 					switch (c)
 					{
 						case '&': 
