@@ -301,59 +301,58 @@ int main(void)
 
 			for(i=0;i<totalComm;i++)
 			{
-				printf("i1 = %d\n",i);
 				pid = fork();
 				if(pid > 0) ChildPID_add(childPIDs, pid);
 				else if(pid == 0)
 				{
-					printf("i2 = %d\n",i);
-					//int file_descriptor;
-					//char *filename;
+					int file_descriptor;
+					char *filename;
 					/* Redirect stdin if any for the first process*/
-					// if(i==0)
-					// {
-					// 	/* open file from redirection if any */
-					// 	filename = (char *)malloc(50 * sizeof(filename));
-					// 	tokens = Token_getInput(tokens,filename,&status);
-					// 	if(status == 0)
-					// 	{
-					// 		printf("open file to read at i = %d\n",i);
-					// 		file_descriptor = open(filename, O_RDONLY);
-					// 		if(file_descriptor < 0){
-					// 			perror("open read");
-					// 			exit(EXIT_FAILURE);
-					// 		}
+					if(i==0)
+					{
+						/* open file from redirection if any */
+						filename = (char *)malloc(50 * sizeof(filename));
+						tokens = Token_getInput(tokens,filename,&status);
+						if(status == 0)
+						{
+							printf("open file to read at i = %d\n",i);
+							fflush(NULL);
+							file_descriptor = open(filename, O_RDONLY);
+							if(file_descriptor < 0){
+								perror("open read");
+								exit(EXIT_FAILURE);
+							}
 
-					// 		close(0);
-					// 		dup(file_descriptor);
-					// 		close(file_descriptor);
-					// 	}
-					// 	free(filename);
-					// }
+							close(0);
+							dup(file_descriptor);
+							close(file_descriptor);
+						}
+						free(filename);
+					}
 
-					// /* Redirect stdout if any */
-					// if(i == totalComm-1)
-					// {
-					// 	filename = (char *)malloc(50 * sizeof(filename));
-					// 	tokens = Token_getOutput(tokens,filename,&status);
-					// 	if(status == 0)
-					// 	{
-					// 		printf("open file to write at i = %d\n",i);
-					// 		file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-					// 		if(file_descriptor < 0){
-					// 			perror("open write");
-					// 			exit(EXIT_FAILURE);
-					// 		}
+					/* Redirect stdout if any */
+					if(i == totalComm-1)
+					{
+						filename = (char *)malloc(50 * sizeof(filename));
+						tokens = Token_getOutput(tokens,filename,&status);
+						if(status == 0)
+						{
+							printf("open file to write at i = %d\n",i);
+							fflush(NULL);
+							file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+							if(file_descriptor < 0){
+								perror("open write");
+								exit(EXIT_FAILURE);
+							}
 
-					// 		close(1);
-					// 		dup(file_descriptor);
-					// 		close(file_descriptor);
-					// 	}
-					// 	free(filename);
-					// }
+							close(1);
+							dup(file_descriptor);
+							close(file_descriptor);
+						}
+						free(filename);
+					}
 
 					/* Make child read from pipe if it's not the first command */
-					printf("i = %d, totalComm-1 = %d\n",i,totalComm-1);
 					if(i!=0)
 					{
 						
@@ -362,6 +361,7 @@ int main(void)
 							exit(EXIT_FAILURE);
 						}
 						printf("Dup2 to read successfully at i = %d with p: %d\n",i,p[2*(i-1)+1]);
+						fflush(NULL);
 					}
 
 					/* Make child write to pipe if it's not the last command */
@@ -373,6 +373,7 @@ int main(void)
 							exit(EXIT_FAILURE);
 						}
 						printf("Dup2 to write successfully at i = %d with p: %d\n",i,p[2*i+1]);
+						fflush(NULL);
 					}
 					
 					if(totalComm>1)
