@@ -502,6 +502,7 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 	int length,subsize,curPos;
 	char **res;
 	length = DynArray_getLength(oTokens);
+	printf("heres\n");
 	subsize=0; i=0; j=0;
 	
 	if(index == 0){
