@@ -134,7 +134,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 
    int iLineIndex = 0;
    int iValueIndex = 0;
-   int num_token = 0;
+   int number_token = 0;
    char c;
    char acValue[MAX_LINE_SIZE];
    struct Token *psToken;
@@ -369,24 +369,80 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 	}
 	
 	ANALYZE:
-		num_token = DynArray_getLength(oTokens);
-		int i;
-		for(i=0;i<num_token;i++){
-			if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_BG && (i!=num_token-1 || i == 0) ){
-				strcpy(errMsg,"Wrong Syntax using &");
-				return FALSE;
-			}
-			else if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_P || getTokenType(DynArray_get(oTokens,i)) == TOKEN_RR || getTokenType(DynArray_get(oTokens,i)) == TOKEN_RL) {
-				if(i>0 && i<num_token-1) {
-					if(getTokenType(DynArray_get(oTokens,i-1)) != TOKEN_WORD || getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
+		number_token = DynArray_getLength(oTokens);
+		int i,nRL=0,nRR=0;
+
+		for(i=0;i<number_token;i++)
+		{
+			switch(getTokenType(DynArray_get(oTokens,i)))
+			{
+				case TOKEN_BG:
+					if(i != number_token-1 || i == 0)
+					{
+						strcpy(errMsg,"Wrong Syntax using &");
+						return FALSE;
+					}
+					break;
+
+				case TOKEN_P:
+					if(i > 0 && i < number_token-1)
+					{
+						if(getTokenType(DynArray_get(oTokens,i-1)) != TOKEN_WORD || getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD)
+						{
+							strcpy(errMsg,"Pipe or redirection destination is not specified");
+							return FALSE;
+						}
+						else if(nRL != 0) {
+							strcpy(errMsg,"Multiple redirection of standard input");
+							return FALSE;
+						}
+						nRL++;
+					}
+					else
+					{
 						strcpy(errMsg,"Pipe or redirection destination is not specified");
 						return FALSE;
 					}
-				}
-				else {
-					strcpy(errMsg,"Pipe or redirection destination is not specified");
-					return FALSE;
-				}
+					break;
+
+				case TOKEN_RR:
+					if(i>0) {
+						if(getTokenType(DynArray_get(oTokens,i-1)) != TOKEN_WORD) {
+							strcpy(errMsg,"Pipe or redirection destination is not specified");
+							return FALSE;
+						}
+						else if(nRR != 0) {
+							strcpy(errMsg,"Multiple redirection of standard output");
+							return FALSE;
+						}
+						nRR++;
+					}
+					else {
+						strcpy(errMsg,"Pipe or redirection destination is not specified");
+						return FALSE;
+					}
+					break;
+
+				case TOKEN_RL:
+					if(i<number_token-1) {
+						if(getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
+							strcpy(errMsg,"Standard input redirection without file name");
+							return FALSE;
+						}
+						else if(nRL != 0) {
+							strcpy(errMsg,"Multiple redirection of standard input");
+							return FALSE;
+						}
+						nRL++;
+					}
+					else {
+						strcpy(errMsg,"Pipe or redirection destination is not specified");
+						return FALSE;
+					}
+					break;
+
+				default:
+					break;
 			}
 		}
 		return TRUE;

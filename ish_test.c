@@ -273,19 +273,61 @@ int main(void)
 			}
 			else
 			{	
-				int i;
+				int i,j, nRL = 0, nRR = 0;
+				number_argv = 0;
 				for(i=0;i<number_token;i++){
+					switch(getTokenType(DynArray_get(tokens,i))){
+						case TOKEN_WORD:
+							number_argv++;
+							break;
 
+						case TOKEN_BG:
+							break;
+							
+						case TOKEN_P:
+							
+							break;
+
+						case TOKEN_RL:
+							char *filename = getTokenValue(DynArray_get(tokens,i-1));
+							// If the file exists, redirect stdout to that file.
+							// If not, create the file with permission 0600 and redirect to that file.
+							int fi = open(filename, O_RDONLY, 0600);
+							if(fi == -1){
+								fprintf(stderr,"%s: no such file or directory\n", filename);
+								DynArray_map(tokens, freeToken, NULL);
+								DynArray_free(tokens);
+								goto LOOP;
+							}
+							close(0);
+							dup(fi);
+							close(fi);
+							break;
+
+						case TOKEN_RR:
+							char *filename = getTokenValue(DynArray_get(tokens,i+1));
+							// If the file exists, redirect stdout to that file.
+							// If not, create the file with permission 0600 and redirect to that file.
+							int fo = open(filename, O_WRONLY | O_CREAT, 0600);
+							close(1);
+							dup(fd);
+							close(fd);
+							break;
+					}
 				}
 
 				// Create a char array of token instead of using Dynamic array
-				argv = (char **)malloc((number_token+1)*sizeof(char *));
-				int i;
+				j=0;
+				argv = (char **)malloc((number_argv+1)*sizeof(char *));
 				for(i=0;i<number_token;i++){
-					argv[i] = (char *)malloc(20*sizeof(char));
-					strcpy(argv[i],getTokenValue(DynArray_get(tokens,i)));
+					if( getTokenType(DynArray_get(tokens,i)) == TOKEN_WORD )
+					{
+						argv[j] = (char *)malloc(20*sizeof(char));
+						strcpy(argv[j],getTokenValue(DynArray_get(tokens,i)));
+						j++;
+					}
 				}
-				argv[number_token] = NULL;
+				argv[number_argv] = NULL;
 				DynArray_map(tokens, freeToken, NULL);
 				DynArray_free(tokens);
 				
@@ -293,7 +335,7 @@ int main(void)
 				execvp(argv[0],argv);
 				
 				// If there is an error, print an error message and terminate the program.
-				for(i=0;i<number_argv;i++){
+				for(i=0;i<number_token;i++){
 					free(argv[i]);
 				}
 
