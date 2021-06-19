@@ -289,6 +289,7 @@ int main(void)
 			// printf("================\n");
 
 			// TotalComm > 1 means There is at least one pipe
+			printf("yep\n");
 			if(totalComm > 1)
 			{
 				pipe(p);
@@ -356,29 +357,6 @@ int main(void)
 						}
 						free(argv);
 						exit(EXIT_FAILURE);
-						// argv = (char **)malloc((number_argv+1)*sizeof(char *));
-						// for(i=0;i<number_token;i++){
-						// 	if( getTokenType(DynArray_get(tokens,i)) == TOKEN_WORD )
-						// 	{
-						// 		argv[j] = (char *)malloc(20*sizeof(char));
-						// 		strcpy(argv[j],getTokenValue(DynArray_get(tokens,i)));
-						// 		j++;
-						// 	}
-						// }
-						// argv[number_argv] = NULL;
-						// DynArray_map(tokens, freeToken, NULL);
-						// DynArray_free(tokens);
-						
-						// // Replace child's image with the corresponding binary
-						// execvp(argv[0],argv);
-						
-						// // If there is an error, print an error message and terminate the program.
-						// for(i=0;i<number_token;i++){
-						// 	free(argv[i]);
-						// }
-						// free(argv);
-						// fprintf(stderr,"%s: no such file or directory\n", command);
-						// exit(0);
 					}
 				}
 			}
