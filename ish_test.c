@@ -34,6 +34,7 @@ char **argv;
 int number_token, number_argv, totalComm;
 int *numArgv_each_Comm;
 
+/* SIGCHLD_handler is to reap child process after they are exited and remove the process ID from child process ID list */
 void SIGCHLD_handler(int iSig)
 {
 	int cpid = wait(NULL);
@@ -45,6 +46,7 @@ void SIGCHLD_handler(int iSig)
 	printf("child %d terminated normally\n", cpid);
 }
 
+/* Parent ignore SIGINT signal but children response to it by their behaviour */
 void SIGINT_handler(int iSig)
 {
 	/* Send SIGINT to children */
@@ -56,6 +58,7 @@ void SIGINT_handler(int iSig)
 	}
 }
 
+/* After the first SIGQUIT signal, the next SIGQUIT signal will be handled by SIGQUIT_hanlder2 which is to terminate */
 void SIGQUIT_handler2(int iSig)
 {
 	exit(0);
@@ -86,6 +89,8 @@ void SIGQUIT_handler1(int iSig)
 	
 }
 
+/* SIGALRM is received when 5 seconds has passed after the first SIGQUIT signal 
+	It will change SIGQUIT handler back to the first one*/
 void SIGALRM_handler(int iSig)
 {
 	/* 5 seconds after the first SIGQUIT, it would set SIGQUIT_handler2 to SIGQUIT_handler1 */
@@ -117,11 +122,11 @@ int main(void)
 		iBuiltIn: 1 if the command is a built-in command
 		number_token: the number of tokens in the command
 	*/
-	char acLine[MAX_LINE_SIZE];
-	char *line;
-	char command[MAX_LINE_SIZE];
-	int status,iSuccessful, iBuiltIn;
+	char acLine[MAX_LINE_SIZE], command[MAX_LINE_SIZE], line[MAX_LINE_SIZE];
+	int status, iSuccessful, iBuiltIn;
 	
+	errMsg = (char *)malloc(50*sizeof(char));
+
 	/*
 		initiate child process storage
 	*/
@@ -144,8 +149,6 @@ int main(void)
 	strcat(ishrc_filepath, "/.ishrc");
 	FILE* fd = fopen(ishrc_filepath,"r");
 
-	errMsg = (char *)malloc(50*sizeof(char));
-
 	if (fd == NULL){
 		fprintf(stderr,"%s: .ishrc file is not found so the system automatically redirects to stdin.\n",SYSTEM_NAME);
 		fd = stdin;
@@ -154,12 +157,17 @@ int main(void)
 	
 	LOOP:do{
 		
-		if(fd == stdin) fprintf(stdout,"%% ");
+		if(fd == stdin){
+			fprintf(stdout,"%% ");
+			fflush(NULL);
+		}
 		line = fgets(acLine, MAX_LINE_SIZE, fd); 
 		if(line == NULL) continue;
 
-		if(fd != stdin) fprintf(stdout,"%% %s", acLine);
-		fflush(NULL);
+		if(fd != stdin){
+			fprintf(stdout,"%% %s", acLine);
+			fflush(NULL);
+		}
 		
 		// Allocate memory for tokens
 		tokens = DynArray_new(0);
@@ -181,16 +189,8 @@ int main(void)
 
 		iBuiltIn = 1;
 		number_token = DynArray_getLength(tokens);
-		
-		/*
-		// Special purpose: To check the generated tokens
-		int it;
-		for(it=0;it<number_token;it++){
-			printf("Token %d: (%s)\n",it,getTokenValue(DynArray_get(tokens,it)));
-		}
-		*/
 
-		strcpy(command, getTokenValue(DynArray_get(tokens, 0)) );
+		strcpy(command, Token_getValue(DynArray_get(tokens, 0)) );
 		/*
 			There are 5 built-in commands: setenv, unsetenv, cd, exit, fg
 			We check if the first token is one of the built-in command.
@@ -200,14 +200,14 @@ int main(void)
 		if (strcmp(command, "setenv") == 0)
 		{
 			// value is not determined
-			if (number_token == 2 && strcmp( getTokenValue(DynArray_get(tokens, 1)),"") != 0)
+			if (number_token == 2 && strcmp( Token_getValue(DynArray_get(tokens, 1)),"") != 0)
 			{
-				setenv(getTokenValue(DynArray_get(tokens,1)), "", 1);
+				setenv(Token_getValue(DynArray_get(tokens,1)), "", 1);
 			}
-			else if (number_token == 3 && strcmp(getTokenValue(DynArray_get(tokens,2)),"|") != 0 \
-					&& strcmp(getTokenValue(DynArray_get(tokens,2)),"<") != 0 && strcmp(getTokenValue(DynArray_get(tokens,2)),">") != 0)
+			else if (number_token == 3 && strcmp(Token_getValue(DynArray_get(tokens,2)),"|") != 0 \
+					&& strcmp(Token_getValue(DynArray_get(tokens,2)),"<") != 0 && strcmp(Token_getValue(DynArray_get(tokens,2)),">") != 0)
 			{
-				setenv(getTokenValue(DynArray_get(tokens,1)), getTokenValue(DynArray_get(tokens,2)), 1);
+				setenv(Token_getValue(DynArray_get(tokens,1)), Token_getValue(DynArray_get(tokens,2)), 1);
 			}
 			else
 			{
@@ -217,11 +217,11 @@ int main(void)
 		// unsetenv var: destroy the variable var.
 		else if (strcmp(command, "unsetenv") == 0)
 		{
-			if (number_token == 2 && strcmp(getTokenValue(DynArray_get(tokens,1)),"") != 0 \
-				&& strcmp(getTokenValue(DynArray_get(tokens,1)),"|") != 0 && strcmp(getTokenValue(DynArray_get(tokens,1)),"<") != 0 \
-				&& strcmp(getTokenValue(DynArray_get(tokens,1)),">") != 0)
+			if (number_token == 2 && strcmp(Token_getValue(DynArray_get(tokens,1)),"") != 0 \
+				&& strcmp(Token_getValue(DynArray_get(tokens,1)),"|") != 0 && strcmp(Token_getValue(DynArray_get(tokens,1)),"<") != 0 \
+				&& strcmp(Token_getValue(DynArray_get(tokens,1)),">") != 0)
 			{
-				unsetenv(getTokenValue(DynArray_get(tokens,1)));
+				unsetenv(Token_getValue(DynArray_get(tokens,1)));
 			}
 			else
 			{
@@ -233,7 +233,7 @@ int main(void)
 		{
 			if(number_token > 2) fprintf(stderr,"%s: cd: too many arguments\n", SYSTEM_NAME);
 			else if(number_token == 2){
-				if(chdir(getTokenValue(DynArray_get(tokens,1))) != 0) fprintf(stderr, "%s: %s\n", SYSTEM_NAME, strerror(errno));
+				if(chdir(Token_getValue(DynArray_get(tokens,1))) != 0) fprintf(stderr, "%s: %s\n", SYSTEM_NAME, strerror(errno));
 			}
 			else chdir(getenv("HOME"));
 		}
@@ -315,8 +315,6 @@ int main(void)
 						tokens = Token_getInput(tokens,filename,&status);
 						if(status == 0)
 						{
-							printf("open file to read at i = %d\n",i);
-							fflush(NULL);
 							file_descriptor = open(filename, O_RDONLY);
 							if(file_descriptor < 0){
 								perror("open read");
@@ -337,8 +335,6 @@ int main(void)
 						tokens = Token_getOutput(tokens,filename,&status);
 						if(status == 0)
 						{
-							printf("open file to write at i = %d\n",i);
-							fflush(NULL);
 							file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 							if(file_descriptor < 0){
 								perror("open write");
@@ -380,10 +376,6 @@ int main(void)
 					}
 
 					argv = Token_getComm(tokens,i,&number_argv);
-					// Create a char array of token instead of using Dynamic array
-					fprintf(stdout, "==== %d ====\n",i);
-					for(j=0;j<number_argv;j++) fprintf(stdout, "argv[%d]: (%s)\n",j,argv[j]);
-					fflush(NULL);
 					execvp(argv[0],argv);
 					fprintf(stderr, "%s: %s\n", argv[0], strerror(errno));
 					exit(EXIT_FAILURE);
@@ -430,6 +422,7 @@ int main(void)
 		goto LOOP;
 	}
 	
+	free(errMsg);
 	DynArray_map(childPIDs, ChildPID_free, NULL);
 	DynArray_free(childPIDs);
 

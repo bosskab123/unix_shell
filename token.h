@@ -15,10 +15,10 @@ void printNumberToken(void *pvItem, void *pvExtra);
 void printWordToken(void *pvItem, void *pvExtra);
 
 /* Return type of the token to caller */
-enum TokenType getTokenType(void *pvItem);
+enum TokenType Token_getType(void *pvItem);
 
 /* Return value of the token to caller */
-char * getTokenValue(void *pvItem);
+char * Token_getValue(void *pvItem);
 
 /* Create and return a Token whose type is eTokenType and whose
    value consists of string pcValue.  Return NULL if insufficient

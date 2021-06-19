@@ -62,7 +62,7 @@ void printWordToken(void *pvItem, void *pvExtra)
 
 /*--------------------------------------------------------------------*/
 
-enum TokenType getTokenType(void *pvItem)
+enum TokenType Token_getType(void *pvItem)
 
 /* Return value of the token to caller */
 
@@ -74,7 +74,7 @@ enum TokenType getTokenType(void *pvItem)
 
 /*--------------------------------------------------------------------*/
 
-char *getTokenValue(void *pvItem)
+char *Token_getValue(void *pvItem)
 
 /* Return value of the token to caller */
 
@@ -375,7 +375,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 		int i,nRL=0,nRR=0,nP=0;
 		for(i=0;i<number_token;i++)
 		{
-			switch(getTokenType(DynArray_get(oTokens,i)))
+			switch(Token_getType(DynArray_get(oTokens,i)))
 			{
 				case TOKEN_BG:
 					if(i != number_token-1 || i == 0)
@@ -388,7 +388,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 				case TOKEN_P:
 					if(i > 0 && i < number_token-1)
 					{
-						if(getTokenType(DynArray_get(oTokens,i-1)) != TOKEN_WORD || getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD)
+						if(Token_getType(DynArray_get(oTokens,i-1)) != TOKEN_WORD || Token_getType(DynArray_get(oTokens,i+1)) != TOKEN_WORD)
 						{
 							strcpy(errMsg,"Pipe or redirection destination is not specified");
 							return FALSE;
@@ -413,7 +413,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 
 				case TOKEN_RR:
 					if(i < number_token - 1) {
-						if(getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
+						if(Token_getType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
 							strcpy(errMsg,"Pipe or redirection destination is not specified");
 							return FALSE;
 						}
@@ -431,7 +431,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 
 				case TOKEN_RL:
 					if(i<number_token-1) {
-						if(getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
+						if(Token_getType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
 							strcpy(errMsg,"Standard input redirection without file name");
 							return FALSE;
 						}
@@ -459,7 +459,7 @@ DynArray_T Token_isBG(DynArray_T oTokens, int *status)
 {
 	int number_token = DynArray_getLength(oTokens);
 	*status = 1;
-	if( getTokenType(DynArray_get(oTokens,number_token-1)) == TOKEN_BG ){
+	if( Token_getType(DynArray_get(oTokens,number_token-1)) == TOKEN_BG ){
 		*status = 0;
 		DynArray_removeAt(oTokens,number_token-1);
 	}
@@ -474,8 +474,8 @@ DynArray_T Token_getInput(DynArray_T oTokens, char *filename, int *status)
 	*status = -1;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
-		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RL){
-			strcpy(filename,getTokenValue(DynArray_get(oTokens,i+1)));
+		if(Token_getType(DynArray_get(oTokens,i)) == TOKEN_RL){
+			strcpy(filename,Token_getValue(DynArray_get(oTokens,i+1)));
 			*status = 0;
 			DynArray_removeAt(oTokens,i);
 			DynArray_removeAt(oTokens,i);
@@ -493,8 +493,8 @@ DynArray_T Token_getOutput(DynArray_T oTokens, char *filename, int *status)
 	*status = -1;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
-		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RR){
-			strcpy(filename,getTokenValue(DynArray_get(oTokens,i+1)));
+		if(Token_getType(DynArray_get(oTokens,i)) == TOKEN_RR){
+			strcpy(filename,Token_getValue(DynArray_get(oTokens,i+1)));
 			*status = 0;
 			DynArray_removeAt(oTokens,i);
 			DynArray_removeAt(oTokens,i);
@@ -511,7 +511,7 @@ int Token_getNumCommand(DynArray_T oTokens)
 	int i,length,total = 1;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
-		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_P) total++;
+		if(Token_getType(DynArray_get(oTokens,i)) == TOKEN_P) total++;
 	}
 
 	return total;
@@ -528,28 +528,28 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 	subsize=0; i=0; j=0;
 	
 	if(index == 0){
-		if( getTokenType(DynArray_get(oTokens,0)) == TOKEN_RL || getTokenType(DynArray_get(oTokens,0)) == TOKEN_RR){
+		if( Token_getType(DynArray_get(oTokens,0)) == TOKEN_RL || Token_getType(DynArray_get(oTokens,0)) == TOKEN_RR){
 			i=2; j=2;
 		}
-		while(j<length && getTokenType(DynArray_get(oTokens,j)) != TOKEN_P){
+		while(j<length && Token_getType(DynArray_get(oTokens,j)) != TOKEN_P){
 			j++;
 		}
 	}
 	else{
 
 		while( curPos<index && i<length ){
-			if( getTokenType(DynArray_get(oTokens,i)) == TOKEN_P) curPos++;
+			if( Token_getType(DynArray_get(oTokens,i)) == TOKEN_P) curPos++;
 			i++;
 		}
 		j=i;
-		while( j<length && getTokenType(DynArray_get(oTokens,j)) != TOKEN_RR && getTokenType(DynArray_get(oTokens,j)) != TOKEN_RL && getTokenType(DynArray_get(oTokens,j)) != TOKEN_P ){
+		while( j<length && Token_getType(DynArray_get(oTokens,j)) != TOKEN_RR && Token_getType(DynArray_get(oTokens,j)) != TOKEN_RL && Token_getType(DynArray_get(oTokens,j)) != TOKEN_P ){
 			j++;
 		}
 
-		if( j<length && (getTokenType(DynArray_get(oTokens,j)) == TOKEN_RL || getTokenType(DynArray_get(oTokens,j)) == TOKEN_RR) && j==i+1){
+		if( j<length && (Token_getType(DynArray_get(oTokens,j)) == TOKEN_RL || Token_getType(DynArray_get(oTokens,j)) == TOKEN_RR) && j==i+1){
 			j=j+2;
 			i=j;
-			while( j<length && getTokenType(DynArray_get(oTokens,j)) != TOKEN_RR && getTokenType(DynArray_get(oTokens,j)) != TOKEN_RL && getTokenType(DynArray_get(oTokens,j)) != TOKEN_P){
+			while( j<length && Token_getType(DynArray_get(oTokens,j)) != TOKEN_RR && Token_getType(DynArray_get(oTokens,j)) != TOKEN_RL && Token_getType(DynArray_get(oTokens,j)) != TOKEN_P){
 				j++;
 			}
 		}
@@ -558,7 +558,7 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 	res = (char **)malloc( (subsize+1)* sizeof(char *));
 	for(k=i;k<j;k++){
 		res[k-i] = (char *)malloc(100 * sizeof(char));
-		strcpy(res[k-i],getTokenValue(DynArray_get(oTokens,k)));
+		strcpy(res[k-i],Token_getValue(DynArray_get(oTokens,k)));
 	}
 
 	res[subsize] = NULL;
