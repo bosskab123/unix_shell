@@ -273,20 +273,20 @@ int main(void)
 			totalComm = Token_getNumCommand(tokens);
 
 			/* Check each command set and total number of command */
-			printf("================\n");
-			printf("totalComm: %d\n", totalComm);
-			for(i=0;i<totalComm;i++){
-				int num_argv;
-				argv = Token_getComm(tokens,i,&num_argv);
-				for(j=0;j<num_argv;j++){
-					printf("%s ",argv[j]);
-				}
-				printf("\n");
-			}
-			printf("================\n");
+			// printf("================\n");
+			// printf("totalComm: %d\n", totalComm);
+			// for(i=0;i<totalComm;i++){
+			// 	int num_argv;
+			// 	argv = Token_getComm(tokens,i,&num_argv);
+			// 	for(j=0;j<num_argv;j++){
+			// 		printf("%s ",argv[j]);
+			// 	}
+			// 	printf("\n");
+			// }
+			// printf("================\n");
 
-			// TotalComm > 0 means There is at least one pipe
-			if(totalComm > 0)
+			// TotalComm > 1 means There is at least one pipe
+			if(totalComm > 1)
 			{
 				pipe(p);
 				if(pipe(p) == -1)
@@ -342,9 +342,17 @@ int main(void)
 								close(file_descriptor);
 							}
 						}
+
+					 	argv = Token_getComm(tokens,i,&num_argv);
+
 						// Create a char array of token instead of using Dynamic array
 						execvp(argv[0],argv);
 						fprintf(stderr,"%s: no such file or directory\n",command);
+						for(i=0;i<number_argv;i++){
+							free(argv[i]);
+						}
+						free(argv);
+						exit(EXIT_FAILURE);
 						// argv = (char **)malloc((number_argv+1)*sizeof(char *));
 						// for(i=0;i<number_token;i++){
 						// 	if( getTokenType(DynArray_get(tokens,i)) == TOKEN_WORD )
