@@ -305,8 +305,8 @@ int main(void)
 				if(pid > 0) ChildPID_add(childPIDs, pid);
 				else if(pid == 0)
 				{
-					int file_descriptor;
-					char *filename;
+					//int file_descriptor;
+					//char *filename;
 					/* Redirect stdin if any for the first process*/
 					// if(i==0)
 					// {
