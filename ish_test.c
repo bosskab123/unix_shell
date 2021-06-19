@@ -289,7 +289,6 @@ int main(void)
 			// printf("================\n");
 
 			// TotalComm > 1 means There is at least one pipe
-			printf("yep\n");
 			if(totalComm > 1)
 			{
 				pipe(p);
