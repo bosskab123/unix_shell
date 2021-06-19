@@ -250,7 +250,7 @@ int main(void)
 		else if (strcmp(command, "fg") == 0)
 		{
 			if(ChildPID_getLength(childPIDs) == 0){
-				fprintf(stdout,"%s: There is no background process.\n");
+				fprintf(stdout,"%s: There is no background process.\n", SYSTEM_NAME);
 				goto CLEANUP;
 			}
 			int lastChild = ChildPID_get(childPIDs, ChildPID_getLength(childPIDs) - 1);
