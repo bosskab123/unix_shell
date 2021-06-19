@@ -293,7 +293,7 @@ int main(void)
 					free(argv[i]);
 				}
 				free(argv);
-				fprintf(stderr,"%s: no such file or directory %s\n",  SYSTEM_NAME, command);
+				fprintf(stderr,"%s: no such file or directory\n", command);
 				exit(0);
 				
 			}
