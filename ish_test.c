@@ -270,8 +270,20 @@ int main(void)
 			}
 			
 			// Fork child process to do the command
-			int pid = 1, p[2];
+			int pid = 1, p[2], i, j;
 			Token_findCommSet(tokens, commSet, &totalComm, numArgv_each_Comm);
+
+			/* Check each command set and total number of command */
+			printf("================\n");
+			printf("totalComm: %d\n", totalComm);
+			for(i=0;i<totalComm;i++){
+				printf("numArgv: %d\n",numArgv_each_Comm[i]);
+				for(j=0;j<numArgv_each_Comm[i];j++){
+					printf("%s ",commSet[i][j]);
+				}
+				printf("\n");
+			}
+			printf("================\n");
 
 			// TotalComm > 0 means There is at least one pipe
 			if(totalComm > 0)
@@ -283,8 +295,6 @@ int main(void)
 					exit(EXIT_FAILURE);
 				}
 			}
-
-			int i;
 
 			for(i=0;i<totalComm;i++)
 			{
