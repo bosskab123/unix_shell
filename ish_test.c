@@ -270,7 +270,7 @@ int main(void)
 			
 			// Fork child process to do the command
 			int pid = 1, i, j;
-			int **p;
+			int *p;
 			totalComm = Token_getNumCommand(tokens);
 
 			/* Check each command set and total number of command */
@@ -289,15 +289,13 @@ int main(void)
 			// TotalComm > 1 means There is at least one pipe
 			if(totalComm > 1)
 			{
-				p = (int **)malloc((totalComm-1)*sizeof(int *));
+				p = (int *)malloc(2*(totalComm-1)*sizeof(int *));
 				for(i=0;i<totalComm-1;i++){
-					p[i] = (int *)malloc(2*sizeof(int));
-					if(pipe(p[i]) == -1)
+					if(pipe(p + i*2) == -1)
 					{
 						perror("pipe");
 						exit(EXIT_FAILURE);
 					}
-					printf("pipe %d are %d and %d\n",i,p[i][0],p[i][1]);
 				}
 			}
 
@@ -331,7 +329,7 @@ int main(void)
 					}
 
 					/* Redirect stdout if any */
-					if(i==totalComm-1)
+					if(i == totalComm-1)
 					{
 						filename = (char *)malloc(50 * sizeof(filename));
 						tokens = Token_getOutput(tokens,filename,&status);
@@ -353,7 +351,7 @@ int main(void)
 					/* Make child read from pipe if it's not the first command */
 					if(i!=0)
 					{
-						if(dup2(p[i-1][0],0) < 0){
+						if(dup2(p[2*(i-1)],0) < 0){
 							perror("dup2");
 							exit(EXIT_FAILURE);
 						}
@@ -362,7 +360,7 @@ int main(void)
 					/* Make child write to pipe if it's not the last command */
 					if(i!=totalComm-1)
 					{
-						if(dup2(p[i][1],1) < 0){
+						if(dup2(p[2*i+1],1) < 0){
 							perror("dup2");
 							exit(EXIT_FAILURE);
 						}
@@ -371,9 +369,8 @@ int main(void)
 					if(totalComm>1)
 					{
 						for(j=0;j<totalComm-1;j++){
-							close(p[j][0]);
-							close(p[j][1]);
-							free(p[j]);
+							close(p[2*j]);
+							close(p[2*j+1]);
 						}
 						free(p);
 					}
@@ -397,9 +394,8 @@ int main(void)
 				if(totalComm>1)
 				{
 					for(j=0;j<totalComm-1;j++){
-						close(p[j][0]);
-						close(p[j][1]);
-						free(p[j]);
+						close(p[2*j]);
+						close(p[2*j+1]);
 					}
 					free(p);
 				}
