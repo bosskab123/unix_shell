@@ -373,8 +373,6 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 	ANALYZE:
 		number_token = DynArray_getLength(oTokens);
 		int i,nRL=0,nRR=0;
-
-		printf("numToken: %d\n",number_token);
 		for(i=0;i<number_token;i++)
 		{
 			switch(getTokenType(DynArray_get(oTokens,i)))
