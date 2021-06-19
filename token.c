@@ -479,79 +479,65 @@ char *Token_getOutput(DynArray_T oTokens)
 	return NULL;
 }
 
-void Token_findCommSet(DynArray_T oTokens, char ***commSet, int *totalComm, int *numArgv_each_Comm)
+int Token_getNumCommand(DynArray_T oTokens)
 {
 	assert(oTokens != NULL);
 
-	int i,j,length,totalSize = 1,num_arg, curComm=0, argp;
+	int i,length,total = 1;
 	char *val;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
 		val = getTokenValue(DynArray_get(oTokens,i));
-		if(strcmp(val,"|") == 0) totalSize++;
+		if(strcmp(val,"|") == 0) total++;
 	}
 
-	*totalComm = totalSize;
-	numArgv_each_Comm = (int *)malloc(totalSize*sizeof(int));
+	return total;
+}
 
-	commSet = (char ***)malloc(totalSize * sizeof(char **));
-	i=0; j=0;
-	while(j<length)
-	{
-		val = getTokenValue(DynArray_get(oTokens,j));
-		if(strcmp(val,"<")==0 || strcmp(val,">")==0)
-		{
-			num_arg = j-i;
-			if(num_arg <= 0)
-			{
-				i = j+2;
+char **Token_getComm(DynArray_T oTokens, int index, int *size)
+{
+	assert(oTokens != NULL);
+
+	int i,j,k;
+	int totalSize,length,subsize, curPos;
+	char **res;
+	length = DynArray_getLength(oTokens);
+	totalSize = Token_getNumCommand(oTokens);
+	subsize=0; i=0; j=0;
+	
+	if(index == 0){
+		if(strcmp(getTokenValue(DynArray_get(oTokens,0)),"<") == 0 || strcmp(getTokenValue(DynArray_get(oTokens,i)),">") == 0){
+			i=2; j=2;
+		}
+		while(strcmp(getTokenValue(DynArray_get(oTokens,j)),"|") != 0 && j<length){
+			j++;
+		}
+	}
+	else{
+
+		while(strcmp(getTokenValue(DynArray_get(oTokens,i)),"|") != 0 && i<length){
+			i++;
+		}
+		j=i;
+		while(strcmp(getTokenValue(DynArray_get(oTokens,j)),">") != 0 && strcmp(getTokenValue(DynArray_get(oTokens,j)),">") != 0 && strcmp(getTokenValue(DynArray_get(oTokens,j)),"|") != 0 && j<length){
+			j++;
+		}
+
+		if((strcmp(getTokenValue(DynArray_get(oTokens,j)),"<") == 0 || strcmp(getTokenValue(DynArray_get(oTokens,j)),">") == 0) && j==i+1){
+			j=j+2;
+			i=j;
+			while(strcmp(getTokenValue(DynArray_get(oTokens,j)),">") != 0 && strcmp(getTokenValue(DynArray_get(oTokens,j)),">") != 0 && strcmp(getTokenValue(DynArray_get(oTokens,j)),"|") != 0 && j<length){
 				j++;
 			}
-			else
-			{
-				commSet[curComm] = (char **)malloc(num_arg+1 * sizeof(char *));
-				
-				for(;j!=i;i++)
-				{
-					argp = num_arg-(j-i);
-					commSet[curComm][argp] = (char *)malloc(20 * sizeof(char));
-					strcpy(commSet[curComm][argp], getTokenValue(DynArray_get(oTokens,i)));
-				}
-				commSet[curComm][num_arg] = NULL;
-				numArgv_each_Comm[curComm] = num_arg+1;
-				curComm++;
-				i = j+2;
-			}
 		}
-		else if(strcmp(val,"|") == 0)
-		{
-			num_arg = j-i;
-			commSet[curComm] = (char **)malloc(num_arg * sizeof(char *));
-				
-			for(;j!=i;i++)
-			{
-				argp = num_arg-(j-i);
-				commSet[curComm][argp] = (char *)malloc(20 * sizeof(char));
-				strcpy(commSet[curComm][argp], getTokenValue(DynArray_get(oTokens,i)));
-			}
-			curComm++;
-			i = j+1;
-		}
-		j++;
 	}
-	
-	num_arg = j-i;
-	commSet[curComm] = (char **)malloc(num_arg+1 * sizeof(char *));
-	printf("token.c : num_arg = %d\n",num_arg);
-	for(;j!=i;i++)
-	{
-		argp = num_arg-(j-i);
-		commSet[curComm][argp] = (char *)malloc(20 * sizeof(char));
-		strcpy(commSet[curComm][argp], getTokenValue(DynArray_get(oTokens,i)));
+	subsize = j-i;
+	res = (char **)malloc(subsize+1 * sizeof(char *));
+	for(k=i;k<j;k++){
+		res[k] = (char *)malloc(20 * sizeof(char));
+		strcpy(res[k],getTokenValue(DynArray_get(oTokens,k)));
 	}
-	commSet[curComm][num_arg] = NULL;
-	numArgv_each_Comm[curComm] = num_arg+1;
-	curComm++;
-
-	assert(curComm == totalSize);
+	res[subsize] = NULL;
+	*size = subsize;
+	return res;
 }

@@ -30,7 +30,6 @@ DynArray_T childPIDs;
 DynArray_T tokens;
 char *errMsg;
 char **argv;
-char ***commSet;
 int number_token, number_argv, totalComm;
 int *numArgv_each_Comm;
 
@@ -271,15 +270,16 @@ int main(void)
 			
 			// Fork child process to do the command
 			int pid = 1, p[2], i, j;
-			Token_findCommSet(tokens, commSet, &totalComm, numArgv_each_Comm);
+			totalComm = Token_getNumCommand(tokens);
 
 			/* Check each command set and total number of command */
 			printf("================\n");
 			printf("totalComm: %d\n", totalComm);
 			for(i=0;i<totalComm;i++){
-				printf("numArgv: %d\n",numArgv_each_Comm[i]);
-				for(j=0;j<numArgv_each_Comm[i];j++){
-					printf("%s ",commSet[i][j]);
+				int num_argv;
+				argv = Token_getComm(tokens,i,&num_argv);
+				for(j=0;j<num_argv;j++){
+					printf("%s ",argv[j]);
 				}
 				printf("\n");
 			}
@@ -343,7 +343,6 @@ int main(void)
 							}
 						}
 						// Create a char array of token instead of using Dynamic array
-						argv = commSet[i];
 						execvp(argv[0],argv);
 						fprintf(stderr,"%s: no such file or directory\n",command);
 						// argv = (char **)malloc((number_argv+1)*sizeof(char *));

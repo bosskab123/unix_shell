@@ -40,6 +40,8 @@ char *Token_getInput(DynArray_T oTokens);
 
 char *Token_getOutput(DynArray_T oTokens);
 
-void Token_findCommSet(DynArray_T oTokens, char ***commSet, int *totalComm, int *numArgv_each_Comm);
+int Token_getNumCommand(DynArray_T oTokens);
+
+char **Token_getComm(DynArray_T oTokens, int index);
 
 #endif
