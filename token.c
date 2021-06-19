@@ -539,5 +539,17 @@ void Token_findCommSet(DynArray_T oTokens, char ***commSet, int *totalComm, int 
 		}
 		j++;
 	}
-	assert(curComm+1 == totalSize);
+	
+	commSet[curComm] = (char **)malloc(num_arg+1 * sizeof(char *));
+	for(;j!=i;i++)
+	{
+		argp = num_arg-(j-i);
+		commSet[curComm][argp] = (char *)malloc(20 * sizeof(char));
+		strcpy(commSet[curComm][argp], getTokenValue(DynArray_get(oTokens,i)));
+	}
+	commSet[curComm][num_arg] = NULL;
+	numArgv_each_Comm[curComm] = num_arg+1;
+	curComm++;
+
+	assert(curComm == totalSize);
 }
