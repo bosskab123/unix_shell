@@ -351,21 +351,23 @@ int main(void)
 					/* Make child read from pipe if it's not the first command */
 					if(i!=0)
 					{
-						printf("Dup2 to read successfully at i = %d with p: %d\n",i,p[2*i+1]);
+						
 						if(dup2(p[2*(i-1)],0) < 0){
 							perror("dup2");
 							exit(EXIT_FAILURE);
 						}
+						printf("Dup2 to read successfully at i = %d with p: %d\n",i,p[2*(i-1)+1]);
 					}
 
 					/* Make child write to pipe if it's not the last command */
 					if(i!=totalComm-1)
 					{
-						printf("Dup2 to write successfully at i = %d with p: %d\n",i,p[2*i+1]);
+						
 						if(dup2(p[2*i+1],1) < 0){
 							perror("dup2");
 							exit(EXIT_FAILURE);
 						}
+						printf("Dup2 to write successfully at i = %d with p: %d\n",i,p[2*i+1]);
 					}
 					
 					if(totalComm>1)
