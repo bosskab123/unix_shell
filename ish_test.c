@@ -91,7 +91,7 @@ void SIGQUIT_handler1(int iSig)
 	
 	/* Send SIGQUIT to children */
 	int length = DynArray_getLength(processes);
-	int i;
+	int i,pid;
 	for(i=0;i<length;i++){
 		pid = Process_getpid(DynArray_get(processes,i));
 		kill( pid, SIGQUIT );

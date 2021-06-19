@@ -17,6 +17,10 @@ int Process_getLastbg(DynArray_T p);
 
 void Process_terminate(DynArray_T p, int pid);
 
+void Process_add(DynArray_T p, int pid, enum ProcessType eProcessType);
+
+int Process_compare(const void *pvElement1, const void *pvElement2);
+
 int Process_getIndex(DynArray_T p, int pid);
 
 // DynArray_T ChildPID_init(int size);
