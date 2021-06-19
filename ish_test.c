@@ -301,10 +301,12 @@ int main(void)
 
 			for(i=0;i<totalComm;i++)
 			{
+				printf("i1 = %d\n",i);
 				pid = fork();
 				if(pid > 0) ChildPID_add(childPIDs, pid);
 				else if(pid == 0)
 				{
+					printf("i2 = %d\n",i);
 					//int file_descriptor;
 					//char *filename;
 					/* Redirect stdin if any for the first process*/
