@@ -364,6 +364,9 @@ int main(void)
 							perror("dup2");
 							exit(EXIT_FAILURE);
 						}
+						else{
+							printf("Dup2 to write successfully at i = %d with p: %d\n",i,p[2*i+1]);
+						}
 					}
 					
 					if(totalComm>1)
