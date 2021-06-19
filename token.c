@@ -461,7 +461,7 @@ DynArray_T Token_isBG(DynArray_T oTokens, int *status)
 	return oTokens;
 }
 
-char *Token_getInput(DynArray_T oTokens, char **filename)
+DynArray_T Token_getInput(DynArray_T oTokens, char *filename)
 {
 	assert(oTokens != NULL);
 	
@@ -469,7 +469,7 @@ char *Token_getInput(DynArray_T oTokens, char **filename)
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
 		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RL){
-			strcpy(*filename, getTokenValue(DynArray_get(oTokens,i+1)));
+			strcpy(filename, getTokenValue(DynArray_get(oTokens,i+1)));
 			DynArray_removeAt(oTokens,i);
 			return oTokens;
 		}
@@ -477,7 +477,7 @@ char *Token_getInput(DynArray_T oTokens, char **filename)
 	return oTokens;
 }
 
-char *Token_getOutput(DynArray_T oTokens, char **filename)
+DynArray_T Token_getOutput(DynArray_T oTokens, char **filename)
 {
 	assert(oTokens != NULL);
 	
@@ -485,7 +485,7 @@ char *Token_getOutput(DynArray_T oTokens, char **filename)
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
 		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RR){
-			strcpy(*filename, getTokenValue(DynArray_get(oTokens,i+1)));
+			strcpy(filename, getTokenValue(DynArray_get(oTokens,i+1)));
 			DynArray_removeAt(oTokens,i);
 			return oTokens;
 		}
