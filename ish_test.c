@@ -241,10 +241,13 @@ int main(void)
 		else if (strcmp(command, "fg") == 0)
 		{
 			int lastChild = ChildPID_get(childPIDs, ChildPID_getLength(childPIDs) - 1);
-
+			fprintf(stdout,"[%d] Lastest background process is executing\n", lastChild);
 			int pid = waitpid(lastChild,&status,0);
 			if(pid == -1) perror("waitpid");
-			else ChildPID_delete(childPIDs, pid);
+			else {
+				fprintf(stdout,"[%d] Done\n", lastChild);
+				ChildPID_delete(childPIDs, pid);
+			}
 		}
 		else iBuiltIn = 0;
 		
