@@ -280,9 +280,13 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 					
 					goto ANALYZE;
 				}
+				else if (c == '\'')
+				{
+					eState = STATE_IN_STRINGONE;
+				}
 				else if (c == '"')
 				{
-					eState = STATE_IN_STRING;
+					eState = STATE_IN_STRINGTWO;
 				}
 				else if (isspace(c))
 				{
