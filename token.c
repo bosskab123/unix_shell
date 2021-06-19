@@ -505,12 +505,13 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 	subsize=0; i=0; j=0;
 	
 	if(index == 0){
-		if(strcmp(getTokenValue(DynArray_get(oTokens,0)),"<") == 0 || strcmp(getTokenValue(DynArray_get(oTokens,i)),">") == 0){
+		if(strcmp(getTokenValue(DynArray_get(oTokens,0)),"<") == 0 || strcmp(getTokenValue(DynArray_get(oTokens,0)),">") == 0){
 			i=2; j=2;
 		}
 		while(strcmp(getTokenValue(DynArray_get(oTokens,j)),"|") != 0 && j<length){
 			j++;
 		}
+		printf("j = %d\n",j);
 	}
 	else{
 
@@ -532,7 +533,6 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 		}
 	}
 	subsize = j-i;
-	printf("subsize: %d\n",subsize);
 	res = (char **)malloc(subsize+1 * sizeof(char *));
 	for(k=i;k<j;k++){
 		res[k] = (char *)malloc(20 * sizeof(char));
