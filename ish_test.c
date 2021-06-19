@@ -362,7 +362,7 @@ int main(void)
 					/* Make child write to pipe if it's not the last command */
 					if(i!=totalComm-1)
 					{
-						if(dup2(p[i-1][1],1) < 0){
+						if(dup2(p[i][1],1) < 0){
 							perror("dup2");
 							exit(EXIT_FAILURE);
 						}
