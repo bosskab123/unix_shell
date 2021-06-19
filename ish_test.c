@@ -198,9 +198,10 @@ int main(void)
 			{
 				setenv(DynArray_get(tokens,1), "", 1);
 			}
-			else if (number_token == 3 && strcmp(getTokenValue(DynArray_get(tokens,1)),"") != 0 && strcmp(getTokenValue(DynArray_get(tokens,2)),"|") != 0 \
+			else if (number_token == 3 && strcmp(getTokenValue(DynArray_get(tokens,2)),"|") != 0 \
 					&& strcmp(getTokenValue(DynArray_get(tokens,2)),"<") != 0 && strcmp(getTokenValue(DynArray_get(tokens,2)),">") != 0)
 			{
+				printf("===========\n==============\n");
 				setenv(DynArray_get(tokens,1), DynArray_get(tokens,2), 1);
 			}
 			else
