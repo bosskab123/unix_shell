@@ -499,10 +499,9 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 	assert(oTokens != NULL);
 
 	int i,j,k;
-	int length,subsize,totalSize,curPos;
+	int length,subsize,curPos;
 	char **res;
 	length = DynArray_getLength(oTokens);
-	totalSize = Token_getNumCommand(oTokens);
 	subsize=0; i=0; j=0;
 	
 	if(index == 0){
