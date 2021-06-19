@@ -284,6 +284,8 @@ int main(void)
 				}
 			}
 
+			int i,j;
+			
 			for(i=0;i<totalComm;i++)
 			{
 				if( pid != 0)
@@ -292,7 +294,7 @@ int main(void)
 					if(pid != 0) ChildPID_add(childPIDs, pid);
 					else 
 					{
-						int file_descriptor,i,j;
+						int file_descriptor;
 						char *filename;
 						
 						/* Redirect stdin if any for the first process*/
