@@ -332,6 +332,7 @@ int main(void)
 						{
 							filename = (char *)malloc(50 * sizeof(filename));
 							tokens = Token_getOutput(tokens,filename,&status);
+							printf("filename output : %s\n", filename);
 							if(status == 0)
 							{
 								file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
