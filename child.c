@@ -5,16 +5,11 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+
+
 void ChildPID_terminate_handler(int iSig)
 {
 	wait(NULL);
-}
-
-void ChildPID_free(void *pvItem, void *pvExtra)
-{
-	assert(pvItem != NULL);
-	int *childPID = (int *)pvItem;
-	free(childPID);
 }
 
 DynArray_T ChildPID_init(int size)
@@ -29,20 +24,44 @@ DynArray_T ChildPID_init(int size)
 	return cp;
 }
 
+int ChildPID_get(DynArray_T cp, int index)
+{
+	int *item;
+	item = DynArray_get(cp,index);
+	return *item;
+}
+
 void ChildPID_add(DynArray_T cp, int pid)
 {
 	assert(cp != NULL);
-	int *child_pid;
-	child_pid = (int *)malloc(sizeof(int));
-	*child_pid = pid;
-	DynArray_add(cp, child_pid);
+	int *p = (int *)malloc(sizeof(int));
+	*p = pid;
+	DynArray_add(cp, p);
+}
+
+void ChildPID_delete(DynArray_T cp, int pid)
+{
+	assert(cp!=NULL);
+	int i;
+	int length = DynArray_getLength(cp);
+	for(i=0;i<length;i++){
+		if(ChildPID_get(cp,i) == pid) {
+			DynArray_removeAt(cp,i);
+			return;
+		}
+	}
 }
 
 int ChildPID_compare(const void *pid1, const void *pid2)
 {
 	assert(pid1 != NULL);
 	assert(pid2 != NULL);
-	int *p1 = (int *)pid1;
-	int *p2 = (int *)pid2;
-	return *p1 == *p2;
+	return (int *)pid1 == (int *)pid2;
+}
+
+void ChildPID_free(void *pvItem, void *pvExtra)
+{
+	assert(pvItem != NULL);
+	int *childPID = (int *)pvItem;
+	free(childPID);
 }

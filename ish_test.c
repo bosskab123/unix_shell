@@ -36,8 +36,8 @@ void SIGCHLD_handler(int iSig)
 	if(cpid == -1) return;
 	
 	int iIndex = DynArray_search(childPIDs, &cpid, ChildPID_compare);
-	int *cp = DynArray_removeAt(childPIDs, iIndex);
-	free(cp);
+	ChildPID_delete(childPIDs, iIndex);
+
 	printf("child %d terminated normally\n", cpid);
 }
 
@@ -174,10 +174,13 @@ int main(void)
 		iBuiltIn = 1;
 		number_token = DynArray_getLength(tokens);
 		
+		/*
+		// Special purpose: To check the generated tokens
 		int it;
 		for(it=0;it<number_token;it++){
 			printf("Token %d: (%s)\n",it,getTokenValue(DynArray_get(tokens,it)));
 		}
+		*/
 
 		strcpy(command, getTokenValue(DynArray_get(tokens, 0)) );
 		/*
@@ -236,6 +239,9 @@ int main(void)
 		else if (strcmp(command, "fg") == 0)
 		{
 			printf("Bring background to foreground pls\n");
+
+			waitpid();
+
 		}
 		else iBuiltIn = 0;
 		
@@ -286,9 +292,11 @@ int main(void)
 			
 			if( foreground == 1 ){
 				pid = wait(&status);
-				
+				if(pid == -1) perror("wait");
+				else ChildPID_delete(childPIDs, pid);
 			}
-			
+			// So there is no action for background
+
 			DynArray_map(tokens, freeToken, NULL);
 			DynArray_free(tokens);
 			
