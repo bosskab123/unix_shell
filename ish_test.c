@@ -282,7 +282,7 @@ int main(void)
 				int num_argv;
 				argv = Token_getComm(tokens,i,&num_argv);
 				for(j=0;j<num_argv;j++){
-					printf("%s ",argv[j]);
+					printf("(%s) ",argv[j]);
 				}
 				printf("\n");
 			}
