@@ -42,6 +42,6 @@ char *Token_getOutput(DynArray_T oTokens);
 
 int Token_getNumCommand(DynArray_T oTokens);
 
-char **Token_getComm(DynArray_T oTokens, int index);
+char **Token_getComm(DynArray_T oTokens, int index, int *size);
 
 #endif
