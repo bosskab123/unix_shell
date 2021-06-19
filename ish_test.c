@@ -391,10 +391,14 @@ int main(void)
 				}
 			}
 			
-			if( foreground == 1 ){
-				pid = wait(&status);
-				if(pid == -1) perror("wait");
-				else ChildPID_delete(childPIDs, pid);
+			if( foreground == 1 )
+			{
+				for(i=0;i<totalComm;i++)
+				{
+					pid = wait(&status);
+					if(pid == -1) perror("wait");
+					else ChildPID_delete(childPIDs, pid);
+				}
 			}
 			// So there is no action for background
 
