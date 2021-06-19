@@ -275,6 +275,7 @@ int main(void)
 			{	
 				int i,j;
 				number_argv = 0;
+				char *filename;
 				for(i=0;i<number_token;i++){
 					switch(getTokenType(DynArray_get(tokens,i))){
 						case TOKEN_WORD:
@@ -289,7 +290,6 @@ int main(void)
 							break;
 
 						case TOKEN_RL:
-							char *filename;
 							filename = getTokenValue(DynArray_get(tokens,i-1));
 							// If the file exists, redirect stdout to that file.
 							// If not, create the file with permission 0600 and redirect to that file.
@@ -307,7 +307,6 @@ int main(void)
 							break;
 
 						case TOKEN_RR:
-							char *filename;
 							filename = getTokenValue(DynArray_get(tokens,i+1));
 							// If the file exists, redirect stdout to that file.
 							// If not, create the file with permission 0600 and redirect to that file.
