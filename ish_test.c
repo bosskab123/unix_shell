@@ -297,6 +297,7 @@ int main(void)
 						perror("pipe");
 						exit(EXIT_FAILURE);
 					}
+					printf("pipe %d are %d and %d\n",p[i][0],p[i][1]);
 				}
 			}
 
