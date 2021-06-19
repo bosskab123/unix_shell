@@ -273,25 +273,30 @@ int main(void)
 			}
 			else
 			{	
-				// Create a char array of token instead of using Dynamic array
-				number_argv = DynArray_getLength(tokens);
-				argv = (char **)malloc((number_argv+1)*sizeof(char *));
 				int i;
-				for(i=0;i<number_argv;i++){
+				for(i=0;i<number_token;i++){
+
+				}
+
+				// Create a char array of token instead of using Dynamic array
+				argv = (char **)malloc((number_token+1)*sizeof(char *));
+				int i;
+				for(i=0;i<number_token;i++){
 					argv[i] = (char *)malloc(20*sizeof(char));
 					strcpy(argv[i],getTokenValue(DynArray_get(tokens,i)));
 				}
-				argv[number_argv] = NULL;
+				argv[number_token] = NULL;
 				DynArray_map(tokens, freeToken, NULL);
 				DynArray_free(tokens);
 				
-				// Create a process to handle with the program.
+				// Replace child's image with the corresponding binary
 				execvp(argv[0],argv);
 				
 				// If there is an error, print an error message and terminate the program.
 				for(i=0;i<number_argv;i++){
 					free(argv[i]);
 				}
+
 				free(argv);
 				fprintf(stderr,"%s: no such file or directory\n", command);
 				exit(0);

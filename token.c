@@ -310,7 +310,22 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 				}
 				else if (c == '&' || c == '|' || c == '>' || c == '<')
 				{
-					acValue[iValueIndex] = c;
+					acValue[iValueIndex] = '\0';
+					psToken = makeToken(TOKEN_WORD, acValue);
+					if (psToken == NULL)
+					{
+						strcpy(errMsg,"Cannot allocate memory");
+						return FALSE;
+					}
+					if (! DynArray_add(oTokens, psToken))
+					{
+						strcpy(errMsg,"Cannot allocate memory");
+						return FALSE;
+					}
+					iValueIndex = 0;
+
+					acValue[iValueIndex++] = c;
+					acValue[iValueIndex++] = '\0';
 					switch (c)
 					{
 						case '&': 
