@@ -508,7 +508,7 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 	subsize=0; i=0; j=0;
 	
 	if(index == 0){
-		if(strcmp(getTokenValue(DynArray_get(oTokens,0)),"<") == 0 || strcmp(getTokenValue(DynArray_get(oTokens,0)),">") == 0){
+		if( getTokenType(DynArray_get(oTokens,0)) == TOKEN_RL || getTokenType(DynArray_get(oTokens,0)) == TOKEN_RR){
 			i=2; j=2;
 		}
 		while(j<length && strcmp(getTokenValue(DynArray_get(oTokens,j)),"|") != 0){
@@ -522,14 +522,14 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 			i++;
 		}
 		j=i;
-		while( j<length && strcmp(getTokenValue(DynArray_get(oTokens,j)),">") != 0 && strcmp(getTokenValue(DynArray_get(oTokens,j)),">") != 0 && strcmp(getTokenValue(DynArray_get(oTokens,j)),"|") != 0 ){
+		while( j<length && getTokenType(DynArray_get(oTokens,j)) != TOKEN_RR && getTokenType(DynArray_get(oTokens,j)) != TOKEN_RL && getTokenType(DynArray_get(oTokens,j)) != TOKEN_P ){
 			j++;
 		}
 
-		if( j<length && (strcmp(getTokenValue(DynArray_get(oTokens,j)),"<") == 0 || strcmp(getTokenValue(DynArray_get(oTokens,j)),">") == 0) && j==i+1){
+		if( j<length && (getTokenType(DynArray_get(oTokens,j)) == TOKEN_RL || getTokenType(DynArray_get(oTokens,j)) == TOKEN_RR) && j==i+1){
 			j=j+2;
 			i=j;
-			while( j<length && strcmp(getTokenValue(DynArray_get(oTokens,j)),">") != 0 && strcmp(getTokenValue(DynArray_get(oTokens,j)),">") != 0 && strcmp(getTokenValue(DynArray_get(oTokens,j)),"|") != 0 ){
+			while( j<length && getTokenType(DynArray_get(oTokens,j)) != TOKEN_RR && getTokenType(DynArray_get(oTokens,j)) != TOKEN_RL && getTokenType(DynArray_get(oTokens,j)) != TOKEN_P){
 				j++;
 			}
 		}
