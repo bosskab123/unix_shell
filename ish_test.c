@@ -269,7 +269,8 @@ int main(void)
 			tokens = Token_isBG(tokens,&foreground);
 			
 			// Fork child process to do the command
-			int pid = 1, p[2], i, j;
+			int pid = 1, i, j;
+			int **p;
 			totalComm = Token_getNumCommand(tokens);
 
 			/* Check each command set and total number of command */
@@ -288,77 +289,104 @@ int main(void)
 			// TotalComm > 1 means There is at least one pipe
 			if(totalComm > 1)
 			{
-				pipe(p);
-				if(pipe(p) == -1)
-				{
-					perror("pipe");
-					exit(EXIT_FAILURE);
+				p = (int **)malloc((totalComm-1)*sizeof(int *));
+				for(i=0;i<totalComm-1;i++){
+					p[i] = (int *)malloc(2*sizeof(int));
+					if(pipe(p[i]) == -1)
+					{
+						perror("pipe");
+						exit(EXIT_FAILURE);
+					}
 				}
 			}
 
 			for(i=0;i<totalComm;i++)
 			{
-				if( pid != 0)
+				pid = fork();
+				if(pid > 0) ChildPID_add(childPIDs, pid);
+				else if(pid == 0)
 				{
-					pid = fork();
-					if(pid != 0) ChildPID_add(childPIDs, pid);
-					else 
+					int file_descriptor;
+					char *filename;
+					
+					/* Redirect stdin if any for the first process*/
+					if(i==0)
 					{
-						int file_descriptor;
-						char *filename;
-						
-						/* Redirect stdin if any for the first process*/
-						if(i==0)
+						/* open file from redirection if any */
+						filename = (char *)malloc(50 * sizeof(filename));
+						tokens = Token_getInput(tokens,filename,&status);
+						if(status == 0)
 						{
-							filename = (char *)malloc(50 * sizeof(filename));
-							tokens = Token_getInput(tokens,filename,&status);
-							if(status == 0)
-							{
-								file_descriptor = open(filename, O_RDONLY);
-								if(file_descriptor < 0){
-									perror("open read");
-									exit(EXIT_FAILURE);
-								}
-
-								close(0);
-								dup(file_descriptor);
-								close(file_descriptor);
+							file_descriptor = open(filename, O_RDONLY);
+							if(file_descriptor < 0){
+								perror("open read");
+								exit(EXIT_FAILURE);
 							}
-							free(filename);
-						}
 
-						/* Redirect stdout if any */
-						if(i==totalComm-1)
-						{
-							filename = (char *)malloc(50 * sizeof(filename));
-							tokens = Token_getOutput(tokens,filename,&status);
-							if(status == 0)
-							{
-								file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-								if(file_descriptor < 0){
-									perror("open write");
-									exit(EXIT_FAILURE);
-								}
-
-								close(1);
-								dup(file_descriptor);
-								close(file_descriptor);
-							}
-							free(filename);
+							close(0);
+							dup(file_descriptor);
+							close(file_descriptor);
 						}
-
-					 	argv = Token_getComm(tokens,i,&number_argv);
-						fflush(NULL);
-						
-						// Create a char array of token instead of using Dynamic array
-						execvp(argv[0],argv);
-						fprintf(stderr, "%s: %s\n", argv[0], strerror(errno));
-						for(j=0;j<number_argv+1;j++){
-							free(argv[j]);
-						}
-						free(argv);
-						exit(EXIT_FAILURE);
+						free(filename);
 					}
+
+					/* Redirect stdout if any */
+					if(i==totalComm-1)
+					{
+						filename = (char *)malloc(50 * sizeof(filename));
+						tokens = Token_getOutput(tokens,filename,&status);
+						if(status == 0)
+						{
+							file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+							if(file_descriptor < 0){
+								perror("open write");
+								exit(EXIT_FAILURE);
+							}
+
+							close(1);
+							dup(file_descriptor);
+							close(file_descriptor);
+						}
+						free(filename);
+					}
+
+					/* Make child read from pipe if it's not the first command */
+					if(i!=0)
+					{
+						if(dup2(p[i-1][0],0) < 0){
+							perror("dup2");
+							exit(EXIT_FAILURE);
+						}
+					}
+
+					/* Make child write to pipe if it's not the last command */
+					if(i!=totalComm-1)
+					{
+						if(dup2(p[i-1][1],1) < 0){
+							perror("dup2");
+							exit(EXIT_FAILURE);
+						}
+					}
+
+					for(j=0;j<totalComm-1;j++){
+						close(p[j][0]);
+						close(p[j][1]);
+						free(p[j]);
+					}
+					free(p);
+
+					argv = Token_getComm(tokens,i,&number_argv);
+					fflush(NULL);
+
+					// Create a char array of token instead of using Dynamic array
+					execvp(argv[0],argv);
+					fprintf(stderr, "%s: %s\n", argv[0], strerror(errno));
+					exit(EXIT_FAILURE);
+				}
+				else 
+				{
+					perror("fork");
+					exit(EXIT_FAILURE);
 				}
 			}
 			
