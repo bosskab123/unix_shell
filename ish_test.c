@@ -163,6 +163,7 @@ int main(void)
 		
 		// Tokenize string in acLine into token and save in tokens
 		char *errMsg = (char *)malloc(50*sizeof(char));
+		printf("(%s)\n",acLine);
 		iSuccessful = lexLine(acLine, tokens, errMsg);
 		if (!iSuccessful) {
 			DynArray_map(tokens, freeToken, NULL);

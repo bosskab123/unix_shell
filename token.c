@@ -223,7 +223,6 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 			    break;
 			
 			case STATE_IN_STRING:
-				printf("get into here\n");
 				if(c != '"')
 				{
 					acValue[iValueIndex++] = c;
