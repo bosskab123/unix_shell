@@ -392,11 +392,11 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 							strcpy(errMsg,"Pipe or redirection destination is not specified");
 							return FALSE;
 						}
-						else if(nRL != 0) {
+						else if(nRR != 0) {
 							strcpy(errMsg,"Multiple redirection of standard input");
 							return FALSE;
 						}
-						nRL++;
+						nRR++;
 					}
 					else
 					{
@@ -406,8 +406,8 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 					break;
 
 				case TOKEN_RR:
-					if(i>0) {
-						if(getTokenType(DynArray_get(oTokens,i-1)) != TOKEN_WORD) {
+					if(i < number_token - 1) {
+						if(getTokenType(DynArray_get(oTokens,i+1)) != TOKEN_WORD) {
 							strcpy(errMsg,"Pipe or redirection destination is not specified");
 							return FALSE;
 						}
@@ -449,3 +449,95 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 	
 }
 
+char *Token_getInput(DynArray_T oTokens)
+{
+	assert(oTokens != NULL);
+	
+	int i,length;
+	char *val;
+	length = DynArray_getLength(oTokens);
+	for(i=0;i<length;i++){
+		val = getTokenValue(DynArray_get(oTokens,i));
+		if(strcmp(val,"<") == 0) return getTokenValue(DynArray_get(oTokens,i+1));
+	}
+	
+	return NULL;
+}
+
+char *Token_getOutput(DynArray_T oTokens)
+{
+	assert(oTokens != NULL);
+	
+	int i,length;
+	char *val;
+	length = DynArray_getLength(oTokens);
+	for(i=0;i<length;i++){
+		val = getTokenValue(DynArray_get(oTokens,i));
+		if(strcmp(val,">") == 0) return getTokenValue(DynArray_get(oTokens,i+1));
+	}
+	
+	return NULL;
+}
+
+void Token_findCommSet(DynArray_T oTokens, char ***commSet, int *totalComm, int *numArgv_each_Comm)
+{
+	assert(oTokens != NULL);
+
+	int i,j,length,totalSize = 1,num_arg, curComm=0, argp;
+	char *val;
+	length = DynArray_getLength(oTokens);
+	for(i=0;i<length;i++){
+		val = getTokenValue(DynArray_get(oTokens,i));
+		if(strcmp(val,"|") == 0) totalSize++;
+	}
+
+	*totalComm = totalSize;
+	numArgv_each_Comm = (int *)malloc(totalSize*sizeof(int));
+
+	commSet = (char ***)malloc(totalSize * sizeof(char **));
+	i=0; j=0;
+	while(j<length)
+	{
+		val = getTokenValue(DynArray_get(oTokens,j));
+		if(strcmp(val,"<")==0 || strcmp(val,">")==0)
+		{
+			num_arg = j-i;
+			if(num_arg <= 0)
+			{
+				i = j+2;
+				j++;
+			}
+			else
+			{
+				commSet[curComm] = (char **)malloc(num_arg+1 * sizeof(char *));
+				
+				for(;j!=i;i++)
+				{
+					argp = num_arg-(j-i);
+					commSet[curComm][argp] = (char *)malloc(20 * sizeof(char));
+					strcpy(commSet[curComm][argp], getTokenValue(DynArray_get(oTokens,i)));
+				}
+				commSet[curComm][num_arg] = NULL;
+				numArgv_each_Comm[curComm] = num_arg+1;
+				curComm++;
+				i = j+2;
+			}
+		}
+		else if(strcmp(val,"|") == 0)
+		{
+			num_arg = j-i;
+			commSet[curComm] = (char **)malloc(num_arg * sizeof(char *));
+				
+			for(;j!=i;i++)
+			{
+				argp = num_arg-(j-i);
+				commSet[curComm][argp] = (char *)malloc(20 * sizeof(char));
+				strcpy(commSet[curComm][argp], getTokenValue(DynArray_get(oTokens,i)));
+			}
+			curComm++;
+			i = j+1;
+		}
+		j++;
+	}
+	assert(curComm == totalSize);
+}

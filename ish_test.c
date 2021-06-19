@@ -27,8 +27,12 @@
 #define SYSTEM_NAME "./ish"
 
 DynArray_T childPIDs;
+DynArray_T tokens;
+char *errMsg;
 char **argv;
-int iSuccessful, iBuiltIn, number_token, number_argv;
+char ***commSet;
+int number_token, number_argv, totalComm;
+int *numArgv_each_Comm;
 
 void SIGCHLD_handler(int iSig)
 {
@@ -116,8 +120,7 @@ int main(void)
 	char acLine[MAX_LINE_SIZE];
 	char *line;
 	char command[MAX_LINE_SIZE];
-	int status;
-	DynArray_T tokens;
+	int status,iSuccessful, iBuiltIn;
 	
 	/*
 		initiate child process storage
@@ -140,8 +143,11 @@ int main(void)
 	strcpy(ishrc_filepath, getenv("HOME"));
 	strcat(ishrc_filepath, "/.ishrc");
 	FILE* fd = fopen(ishrc_filepath,"r");
+
+	errMsg = (char *)malloc(50*sizeof(char));
+
 	if (fd == NULL){
-		fprintf(stderr,".ishrc file is not found so the system automatically redirects to stdin.\n");
+		fprintf(stderr,"%s: .ishrc file is not found so the system automatically redirects to stdin.\n",SYSTEM_NAME);
 		fd = stdin;
 	}
 	free(ishrc_filepath);
@@ -164,7 +170,7 @@ int main(void)
 		}
 		
 		// Tokenize string in acLine into token and save in tokens
-		char *errMsg = (char *)malloc(50*sizeof(char));
+		
 		iSuccessful = lexLine(acLine, tokens, errMsg);
 		if (!iSuccessful) {
 			DynArray_map(tokens, freeToken, NULL);
@@ -264,88 +270,96 @@ int main(void)
 			}
 			
 			// Fork child process to do the command
-			pid_t pid;
-			pid = fork();
-			
-			if(pid != 0)
+			int pid = 1, p[2];
+			Token_findCommSet(tokens, commSet, &totalComm, numArgv_each_Comm);
+
+			// TotalComm > 0 means There is at least one pipe
+			if(totalComm > 0)
 			{
-				ChildPID_add(childPIDs, pid);
+				pipe(p);
+				if(pipe(p) == -1)
+				{
+					perror("p");
+					exit(EXIT_FAILURE);
+				}
 			}
-			else
-			{	
-				int i,j;
-				number_argv = 0;
-				char *filename;
-				for(i=0;i<number_token;i++){
-					switch(getTokenType(DynArray_get(tokens,i))){
-						case TOKEN_WORD:
-							number_argv++;
-							break;
 
-						case TOKEN_BG:
-							break;
-
-						case TOKEN_P:
-							
-							break;
-
-						case TOKEN_RL:
-							filename = getTokenValue(DynArray_get(tokens,i-1));
-							// If the file exists, redirect stdout to that file.
-							// If not, create the file with permission 0600 and redirect to that file.
-							int fi;
-							fi = open(filename, O_RDONLY, 0600);
-							if(fi == -1){
-								fprintf(stderr,"%s: no such file or directory\n", filename);
-								DynArray_map(tokens, freeToken, NULL);
-								DynArray_free(tokens);
-								goto LOOP;
-							}
-							close(0);
-							dup(fi);
-							close(fi);
-							break;
-
-						case TOKEN_RR:
-							filename = getTokenValue(DynArray_get(tokens,i+1));
-							// If the file exists, redirect stdout to that file.
-							// If not, create the file with permission 0600 and redirect to that file.
-							int fo;
-							fo = open(filename, O_WRONLY | O_CREAT, 0600);
-							close(1);
-							dup(fo);
-							close(fo);
-							break;
-					}
-				}
-
-				// Create a char array of token instead of using Dynamic array
-				j=0;
-				argv = (char **)malloc((number_argv+1)*sizeof(char *));
-				for(i=0;i<number_token;i++){
-					if( getTokenType(DynArray_get(tokens,i)) == TOKEN_WORD )
+			for(i=0;i<totalComm;i++)
+			{
+				if( pid != 0)
+				{
+					pid = fork();
+					if(pid != 0) ChildPID_add(childPIDs, pid);
+					else 
 					{
-						argv[j] = (char *)malloc(20*sizeof(char));
-						strcpy(argv[j],getTokenValue(DynArray_get(tokens,i)));
-						j++;
+						int file_descriptor;
+						char *filename;
+						
+						/* Redirect stdin if any for the first process*/
+						if(i==0)
+						{
+							filename = Token_getInput(tokens);
+							if(filename != NULL)
+							{
+								file_descriptor = open(filename, O_RDONLY);
+								if(file_descriptor < 0){
+									perror("open");
+									exit(EXIT_FAILURE);
+								}
+
+								close(0);
+								dup(file_descriptor);
+								close(file_descriptor);
+							}
+						}
+
+						/* Redirect stdout if any */
+						else if(i==totalComm-1)
+						{
+							filename = Token_getOutput(tokens);
+							if(filename != NULL)
+							{
+								file_descriptor = open(filename, O_WRONLY | O_CREAT, 0600);
+								if(file_descriptor < 0){
+									perror("open");
+									exit(EXIT_FAILURE);
+								}
+
+								close(1);
+								dup(file_descriptor);
+								close(file_descriptor);
+							}
+						}
+						// Create a char array of token instead of using Dynamic array
+						j=0;
+						argv = commSet[i];
+						execvp(argv[0],argv);
+						fprintf(stderr,"%s: no such file or directory\n",command);
+						// argv = (char **)malloc((number_argv+1)*sizeof(char *));
+						// for(i=0;i<number_token;i++){
+						// 	if( getTokenType(DynArray_get(tokens,i)) == TOKEN_WORD )
+						// 	{
+						// 		argv[j] = (char *)malloc(20*sizeof(char));
+						// 		strcpy(argv[j],getTokenValue(DynArray_get(tokens,i)));
+						// 		j++;
+						// 	}
+						// }
+						// argv[number_argv] = NULL;
+						// DynArray_map(tokens, freeToken, NULL);
+						// DynArray_free(tokens);
+						
+						// // Replace child's image with the corresponding binary
+						// execvp(argv[0],argv);
+						
+						// // If there is an error, print an error message and terminate the program.
+						// for(i=0;i<number_token;i++){
+						// 	free(argv[i]);
+						// }
+						// free(argv);
+						// fprintf(stderr,"%s: no such file or directory\n", command);
+						// exit(0);
 					}
 				}
-				argv[number_argv] = NULL;
-				DynArray_map(tokens, freeToken, NULL);
-				DynArray_free(tokens);
-				
-				// Replace child's image with the corresponding binary
-				execvp(argv[0],argv);
-				
-				// If there is an error, print an error message and terminate the program.
-				for(i=0;i<number_token;i++){
-					free(argv[i]);
-				}
-
-				free(argv);
-				fprintf(stderr,"%s: no such file or directory\n", command);
-				exit(0);
-				
 			}
 			
 			if( foreground == 1 ){

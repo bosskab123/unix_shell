@@ -36,4 +36,10 @@ struct Token *makeToken(enum TokenType eTokenType,
    pcLine. */
 int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg);
 
+char *Token_getInput(DynArray_T oTokens);
+
+char *Token_getOutput(DynArray_T oTokens);
+
+void Token_findCommSet(DynArray_T oTokens, char ***commSet, int *totalComm, int *numArgv_each_Comm);
+
 #endif
