@@ -308,7 +308,6 @@ int main(void)
 				{
 					int file_descriptor;
 					char *filename;
-					printf("1\n");
 					/* Redirect stdin if any for the first process*/
 					if(i==0)
 					{
@@ -350,7 +349,6 @@ int main(void)
 						free(filename);
 					}
 
-					printf("2\n");
 					/* Make child read from pipe if it's not the first command */
 					if(i!=0)
 					{
@@ -368,17 +366,19 @@ int main(void)
 							exit(EXIT_FAILURE);
 						}
 					}
-					printf("3\n");
-					for(j=0;j<totalComm-1;j++){
-						close(p[j][0]);
-						close(p[j][1]);
-						free(p[j]);
+					
+					if(totalComm>1)
+					{
+						for(j=0;j<totalComm-1;j++){
+							close(p[j][0]);
+							close(p[j][1]);
+							free(p[j]);
+						}
+						free(p);
 					}
-					free(p);
 
 					argv = Token_getComm(tokens,i,&number_argv);
 					fflush(NULL);
-					printf("4\n");
 					// Create a char array of token instead of using Dynamic array
 					execvp(argv[0],argv);
 					fprintf(stderr, "%s: %s\n", argv[0], strerror(errno));
