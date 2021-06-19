@@ -461,7 +461,7 @@ DynArray_T Token_isBG(DynArray_T oTokens, int *status)
 	return oTokens;
 }
 
-DynArray_T Token_getInput(DynArray_T oTokens, char **filename)
+char *Token_getInput(DynArray_T oTokens, char **filename)
 {
 	assert(oTokens != NULL);
 	
@@ -477,7 +477,7 @@ DynArray_T Token_getInput(DynArray_T oTokens, char **filename)
 	return oTokens;
 }
 
-DynArray_T Token_getOutput(DynArray_T oTokens, char **filename)
+char *Token_getOutput(DynArray_T oTokens, char **filename)
 {
 	assert(oTokens != NULL);
 	
