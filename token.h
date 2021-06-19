@@ -36,6 +36,8 @@ struct Token *makeToken(enum TokenType eTokenType,
    pcLine. */
 int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg);
 
+int Token_isBG(DynArray_T oTokens);
+
 char *Token_getInput(DynArray_T oTokens);
 
 char *Token_getOutput(DynArray_T oTokens);

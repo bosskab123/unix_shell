@@ -265,11 +265,8 @@ int main(void)
 			fflush(NULL);
 			
 			// Check if it is foreground or background
-			int foreground = 1;
-			if( strcmp("&",getTokenValue(DynArray_get(tokens,number_token-1))) == 0 ){
-				foreground = 0;
-				DynArray_removeAt(tokens,number_token-1);
-			}
+			int foreground;
+			tokens = Token_isBG(tokens,foreground);
 			
 			// Fork child process to do the command
 			int pid = 1, p[2], i, j;

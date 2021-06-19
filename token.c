@@ -452,6 +452,17 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 	
 }
 
+DynArray_T Token_isBG(DynArray_T oTokens, int *status)
+{
+	int number_token = DynArray_getLength(oTokens);
+	*status = 1;
+	if( getTokenType(DynArray_get(oTokens,number_token-1)) == TOKEN_BG ){
+		*status = 0;
+		DynArray_removeAt(oTokens,number_token-1);
+	}
+	return oTokens;
+}
+
 char *Token_getInput(DynArray_T oTokens)
 {
 	assert(oTokens != NULL);
