@@ -233,7 +233,7 @@ int main(void)
 		{
 			if(number_token > 2) fprintf(stderr,"%s: cd: too many arguments\n", SYSTEM_NAME);
 			else if(number_token == 2){
-				if(chdir(getTokenValue(DynArray_get(tokens,1))) != 0) fprintf(stderr, "%s: %s", SYSTEM_NAME, strerror(errno));
+				if(chdir(getTokenValue(DynArray_get(tokens,1))) != 0) fprintf(stderr, "%s: %s\n", SYSTEM_NAME, strerror(errno));
 			}
 			else chdir(getenv("HOME"));
 		}
@@ -350,7 +350,7 @@ int main(void)
 
 						// Create a char array of token instead of using Dynamic array
 						execvp(argv[0],argv);
-						fprintf(stderr, "%s: %s", argv[0], strerror(errno));
+						fprintf(stderr, "%s: %s\n", argv[0], strerror(errno));
 						for(j=0;j<number_argv+1;j++){
 							free(argv[j]);
 						}
