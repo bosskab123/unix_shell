@@ -116,6 +116,7 @@ int main(void)
 	char acLine[MAX_LINE_SIZE];
 	char *line;
 	char command[MAX_LINE_SIZE];
+	int status;
 	DynArray_T tokens;
 	
 	/*
@@ -240,9 +241,9 @@ int main(void)
 		{
 			printf("Bring background to foreground pls\n");
 
-			int lastChild = ChildPID_get(ChildPID_getLength(cp) - 1);
+			int lastChild = ChildPID_get(childPIDs, ChildPID_getLength(childPIDs) - 1);
 
-			int pid = waitpid(lastChild);
+			int pid = waitpid(lastChild,&status,0);
 			if(pid == -1) perror("waitpid");
 			else ChildPID_delete(childPIDs, pid);
 
@@ -261,7 +262,6 @@ int main(void)
 			// Fork child process to do the command
 			pid_t pid;
 			pid = fork();
-			int status;
 			
 			if(pid != 0)
 			{
