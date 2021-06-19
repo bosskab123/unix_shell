@@ -313,8 +313,6 @@ int main(void)
 						/* open file from redirection if any */
 						filename = (char *)malloc(50 * sizeof(filename));
 						tokens = Token_getInput(tokens,filename,&status);
-						printf("test\n");
-						fflush(NULL);
 						if(status == 0)
 						{
 							printf("open file to read at i = %d\n",i);
@@ -366,6 +364,8 @@ int main(void)
 					/* Make child write to pipe if it's not the last command */
 					if(i!=totalComm-1)
 					{
+						printf("test\n");
+						fflush(NULL);
 						if(dup2(p[2*i+1],1) < 0){
 							perror("dup2");
 							exit(EXIT_FAILURE);
