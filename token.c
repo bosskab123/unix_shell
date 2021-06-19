@@ -508,6 +508,7 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 		if(strcmp(getTokenValue(DynArray_get(oTokens,0)),"<") == 0 || strcmp(getTokenValue(DynArray_get(oTokens,0)),">") == 0){
 			i=2; j=2;
 		}
+		printf("j = %d\n",j);
 		while(strcmp(getTokenValue(DynArray_get(oTokens,j)),"|") != 0 && j<length){
 			j++;
 		}
