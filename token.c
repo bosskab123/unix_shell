@@ -542,6 +542,7 @@ void Token_findCommSet(DynArray_T oTokens, char ***commSet, int *totalComm, int 
 	
 	num_arg = j-i;
 	commSet[curComm] = (char **)malloc(num_arg+1 * sizeof(char *));
+	printf("token.c : num_arg = %d\n",num_arg);
 	for(;j!=i;i++)
 	{
 		argp = num_arg-(j-i);
