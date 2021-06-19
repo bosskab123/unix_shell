@@ -231,7 +231,9 @@ int main(void)
 		else if (strcmp(command, "cd") == 0)
 		{
 			if(number_token > 2) fprintf(stderr,"%s: cd: too many arguments\n", SYSTEM_NAME);
-			else if(number_token == 2) chdir(getTokenValue(DynArray_get(tokens,1)));
+			else if(number_token == 2){
+				if(chdir(getTokenValue(DynArray_get(tokens,1))) != 0) perror("chdir");
+			}
 			else chdir(getenv("HOME"));
 		}
 		// exit: exit shell with status 0
