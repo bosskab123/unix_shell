@@ -292,7 +292,7 @@ int main(void)
 					if(pid != 0) ChildPID_add(childPIDs, pid);
 					else 
 					{
-						int file_descriptor;
+						int file_descriptor,i,j;
 						char *filename;
 						
 						/* Redirect stdin if any for the first process*/
