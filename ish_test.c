@@ -284,8 +284,8 @@ int main(void)
 				}
 			}
 
-			int i,j;
-			
+			int i;
+
 			for(i=0;i<totalComm;i++)
 			{
 				if( pid != 0)
