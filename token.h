@@ -36,14 +36,21 @@ struct Token *makeToken(enum TokenType eTokenType,
    pcLine. */
 int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg);
 
-int Token_isBG(DynArray_T oTokens, int *status);
+/* Check if this set of tokens is a background process (end with &) 
+   And eliminate the '&' out grom the array
+*/
+DynArray_T Token_isBG(DynArray_T oTokens, int *status);
 
+/* Get input file descriptor */
 char *Token_getInput(DynArray_T oTokens);
 
+/* Get output file descriptor */
 char *Token_getOutput(DynArray_T oTokens);
 
+/* Get the total number of command in a set of tokens*/
 int Token_getNumCommand(DynArray_T oTokens);
 
+/* Get ith command in the set of tokens*/
 char **Token_getComm(DynArray_T oTokens, int index, int *size);
 
 #endif
