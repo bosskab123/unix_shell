@@ -60,9 +60,9 @@ void SIGCHLD_handler(int iSig)
 void SIGINT_handler(int iSig)
 {
 	/* Send SIGINT to children */
-	int childPID_length = DynArray_getLength(processes);
+	int length = DynArray_getLength(processes);
 	int i,pid;
-	for(i=0;i<childPID_length;i++){
+	for(i=0;i<length;i++){
 		pid = Process_getpid(DynArray_get(processes,i));
 		kill( pid, SIGINT );
 	}
@@ -90,11 +90,11 @@ void SIGQUIT_handler1(int iSig)
 	alarm(5);
 	
 	/* Send SIGQUIT to children */
-	int childPID_length = DynArray_getLength(childPIDs);
+	int length = DynArray_getLength(processes);
 	int i;
-	for(i=0;i<childPID_length;i++){
-		int *cpid = (int *)DynArray_get(childPIDs,i);
-		kill( *cpid, SIGQUIT );
+	for(i=0;i<length;i++){
+		pid = Process_getpid(DynArray_get(processes,i));
+		kill( pid, SIGQUIT );
 	}
 	
 }
@@ -414,9 +414,8 @@ int main(void)
 			
 			continue;
 		}
-		CLEANUP:
-			DynArray_map(tokens, freeToken, NULL);
-			DynArray_free(tokens);		
+		DynArray_map(tokens, freeToken, NULL);
+		DynArray_free(tokens);		
 	} while(line != NULL);
 	if(fd != stdin)
 	{

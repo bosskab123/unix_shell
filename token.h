@@ -45,7 +45,7 @@ int Token_isBG(DynArray_T oTokens);
 char *Token_getInput(DynArray_T oTokens, int *status);
 
 /* Get output file descriptor */
-char *Token_getOutput(DynArray_T oTokens, char *filename, int *status);
+char *Token_getOutput(DynArray_T oTokens, int *status);
 
 /* Get the total number of command in a set of tokens*/
 int Token_getNumCommand(DynArray_T oTokens);

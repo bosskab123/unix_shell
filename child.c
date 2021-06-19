@@ -14,7 +14,7 @@ struct Process
 
 	/* process ID */
 	int pid;
-}
+};
 
 void freeProcess(void *pvItem, void *pvExtra)
 
@@ -32,7 +32,7 @@ enum ProcessType Process_getType(void *pvItem)
 
 {
 	assert(pvItem != NULL);
-	struct Process *psProcecss = (struct Process*)pvItem;
+	struct Process *psProcess = (struct Process*)pvItem;
 	return psProcess->pType;
 }
 

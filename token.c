@@ -473,7 +473,7 @@ char *Token_getInput(DynArray_T oTokens, int *status)
 	return filename;
 }
 
-char *Token_getOutput(DynArray_T oTokens, char *filename, int *status)
+char *Token_getOutput(DynArray_T oTokens, int *status)
 {
 	assert(oTokens != NULL);
 	
