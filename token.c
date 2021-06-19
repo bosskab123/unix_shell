@@ -535,9 +535,9 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 		}
 	}
 	subsize = j-i;
-	printf("subsize: %d\n", subsize);
 	res = (char **)malloc(subsize+1 * sizeof(char *));
 	for(k=i;k<j;k++){
+		printf("subsize: %d\n", subsize);
 		res[k] = (char *)malloc(100 * sizeof(char));
 		strcpy(res[k],getTokenValue(DynArray_get(oTokens,k)));
 	}
