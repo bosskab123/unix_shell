@@ -543,7 +543,7 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 	}
 
 	for(k=i;k<j;k++){
-		pritnf("string %d: %s\n",k,res[k-i]);
+		printf("string %d: %s\n",k,res[k-i]);
 	}
 
 	res[subsize] = NULL;
