@@ -45,7 +45,6 @@ void SIGINT_handler(int iSig)
 {
 	/* Send SIGINT to children */
 	int childPID_length = DynArray_getLength(childPIDs);
-	printf("SIGINT alert: length = %d\n",childPID_length);
 	int i;
 	for(i=0;i<childPID_length;i++){
 		int *cpid = (int *)DynArray_get(childPIDs,i);
