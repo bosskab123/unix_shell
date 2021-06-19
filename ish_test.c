@@ -310,6 +310,7 @@ int main(void)
 						/* Redirect stdin if any for the first process*/
 						if(i==0)
 						{
+							filename = (char *)malloc(50 * sizeof(filename));
 							tokens = Token_getInput(tokens,filename);
 							if(filename != NULL)
 							{
@@ -323,11 +324,13 @@ int main(void)
 								dup(file_descriptor);
 								close(file_descriptor);
 							}
+							free(filename);
 						}
 
 						/* Redirect stdout if any */
 						if(i==totalComm-1)
 						{
+							filename = (char *)malloc(50 * sizeof(filename));
 							tokens = Token_getOutput(tokens,filename);
 							if(filename != NULL)
 							{
@@ -341,6 +344,7 @@ int main(void)
 								dup(file_descriptor);
 								close(file_descriptor);
 							}
+							free(filename);
 						}
 
 					 	argv = Token_getComm(tokens,i,&number_argv);
