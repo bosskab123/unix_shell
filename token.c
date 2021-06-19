@@ -474,6 +474,7 @@ DynArray_T Token_getInput(DynArray_T oTokens, char **filename)
 			return oTokens;
 		}
 	}
+	return oTokens;
 }
 
 DynArray_T Token_getOutput(DynArray_T oTokens, char **filename)
@@ -489,6 +490,7 @@ DynArray_T Token_getOutput(DynArray_T oTokens, char **filename)
 			return oTokens;
 		}
 	}
+	return oTokens;
 }
 
 int Token_getNumCommand(DynArray_T oTokens)
