@@ -225,7 +225,7 @@ int main(void)
 			}
 			else
 			{
-				fprintf(stderr,"%s: correct syntax is \"unsetenv $var\"\n", SYSTEM_NAME);
+				fprintf(stderr,"%s: unsetenv takes one parameter\n", SYSTEM_NAME);
 			}
 		}
 		// cd [dir]: change current working directory to dir. If dir is omitted, change to user's HOME directory
