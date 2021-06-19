@@ -153,6 +153,7 @@ int main(void)
 		if(line == NULL) continue;
 		
 		if(fd != stdin) fprintf(stdout,"%% %s", acLine);
+		fflush(NULL);
 		
 		// Allocate memory for tokens
 		tokens = DynArray_new(0);
@@ -224,7 +225,7 @@ int main(void)
 		// cd [dir]: change current working directory to dir. If dir is omitted, change to user's HOME directory
 		else if (strcmp(command, "cd") == 0)
 		{
-			if(number_token > 2) fprintf(stderr,"-bash: cd: too many arguments\n");
+			if(number_token > 2) fprintf(stderr,"%s: cd: too many arguments\n", SYSTEM_NAME);
 			else if(number_token == 2) chdir(getTokenValue(DynArray_get(tokens,1)));
 			else chdir(getenv("HOME"));
 		}
@@ -239,14 +240,11 @@ int main(void)
 		 When there are multiple programs running in the background, it will bring the most recently launched program to the foreground. */
 		else if (strcmp(command, "fg") == 0)
 		{
-			printf("Bring background to foreground pls\n");
-
 			int lastChild = ChildPID_get(childPIDs, ChildPID_getLength(childPIDs) - 1);
 
 			int pid = waitpid(lastChild,&status,0);
 			if(pid == -1) perror("waitpid");
 			else ChildPID_delete(childPIDs, pid);
-
 		}
 		else iBuiltIn = 0;
 		
