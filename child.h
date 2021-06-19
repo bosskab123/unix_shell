@@ -17,6 +17,8 @@ int Process_getLastbg(DynArray_T p);
 
 void Process_terminate(DynArray_T p, int pid);
 
+int Process_getIndex(DynArray_T p, int pid);
+
 // DynArray_T ChildPID_init(int size);
 
 // int ChildPID_getLength(DynArray_T cp);

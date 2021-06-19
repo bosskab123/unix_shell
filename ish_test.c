@@ -42,13 +42,17 @@ void SIGCHLD_handler(int iSig)
 	if(cpid == -1) return;
 	else
 	{
-		if(Process_getType(DynArray_get(processes)) == PROCESS_BG)
+		int index;
+		index = Process_getIndex(processes, cpid);
+		assert(index != -1);
+
+		if(Process_getType(DynArray_get(processes,index)) == PROCESS_BG)
 		{
 			Process_terminate(processes,cpid);
 			fprintf(stdout,"child %d terminated normally\n", cpid);
 			fflush(NULL);
 		}
-		else if(Process_getType(DynArray_get(processes)) == PROCESS_FG) Process_terminate(processes,cpid);
+		else if(Process_getType(DynArray_get(processes,index)) == PROCESS_FG) Process_terminate(processes,cpid);
 	}
 }
 

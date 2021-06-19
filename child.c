@@ -122,6 +122,29 @@ void Process_add(DynArray_T p, int pid, enum ProcessType eProcessType)
 
 	DynArray_add(p, psProcess);
 }
+
+int Process_compare(const void *pvElement1, const void *pvElement2)
+{
+	assert(pvElement1 != NULL);
+	assert(pvElement2 != NULL);
+	struct Process *p1 = (struct Process *)pvElement1;
+	struct Process *p2 = (struct Process *)pvElement2;
+	return p1->pid - p2->pid;
+}
+
+int Process_getIndex(DynArray_T p, int pid)
+{
+	assert(p != NULL);
+	assert(pid > 0);
+	int length = DynArray_getLength(p);
+	int i;
+	for(i=length-1;i>=0;i--){
+		if(Process_getpid(DynArray_get(p,i)) == pid){
+			return i;
+		} 
+	}
+	return -1;
+}
 // DynArray_T ChildPID_init(int size)
 // {
 // 	assert(size >= 0);
