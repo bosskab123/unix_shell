@@ -397,7 +397,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 							strcpy(errMsg,"Multiple redirection of standard input");
 							return FALSE;
 						}
-						else if(nP != 0 && nRR >= nP) {
+						else if(nP != 0 && nRR > nP) {
 							strcpy(errMsg,"Multiple redirection of standard input");
 							return FALSE;
 						}
