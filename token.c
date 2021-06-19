@@ -487,11 +487,9 @@ int Token_getNumCommand(DynArray_T oTokens)
 	assert(oTokens != NULL);
 
 	int i,length,total = 1;
-	char *val;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
-		val = getTokenValue(DynArray_get(oTokens,i));
-		if(strcmp(val,"|") == 0) total++;
+		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_P) total++;
 	}
 
 	return total;
