@@ -42,10 +42,10 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg);
 DynArray_T Token_isBG(DynArray_T oTokens, int *status);
 
 /* Get input file descriptor */
-char *Token_getInput(DynArray_T oTokens);
+char *Token_getInput(DynArray_T oTokens, char *filename);
 
 /* Get output file descriptor */
-char *Token_getOutput(DynArray_T oTokens);
+char *Token_getOutput(DynArray_T oTokens, char *filename);
 
 /* Get the total number of command in a set of tokens*/
 int Token_getNumCommand(DynArray_T oTokens);
