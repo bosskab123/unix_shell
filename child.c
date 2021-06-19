@@ -20,8 +20,7 @@ void ChildPID_free(void *pvItem, void *pvExtra)
 DynArray_T ChildPID_init(int size)
 {
 	assert(size >= 0);
-	DynArray_T
-	cp = DynArray_new(size);
+	DynArray_T cp = DynArray_new(size);
 	if (cp == NULL)
 	{
 		fprintf(stderr, "Cannot allocate memory\n");
@@ -41,6 +40,8 @@ void ChildPID_add(DynArray_T cp, int pid)
 
 int ChildPID_compare(const void *pid1, const void *pid2)
 {
+	assert(pid1 != NULL);
+	assert(pid2 != NULL);
 	int *p1 = (int *)pid1;
 	int *p2 = (int *)pid2;
 	return *p1 == *p2;

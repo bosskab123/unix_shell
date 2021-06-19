@@ -170,10 +170,15 @@ int main(void)
 			if(strcmp(errMsg,"") != 0) fprintf(stderr,"%s: %s\n",SYSTEM_NAME,errMsg);
 			continue;
 		}
-		
+
 		iBuiltIn = 1;
 		number_token = DynArray_getLength(tokens);
 		
+		int it;
+		for(it=0;it<number_token;it++){
+			printf("Token %d: (%s)\n",it,getTokenValue(DynArray_get(tokens,it)));
+		}
+
 		strcpy(command, getTokenValue(DynArray_get(tokens, 0)) );
 		/*
 			There are 5 built-in commands: setenv, unsetenv, cd, exit, fg
@@ -209,7 +214,7 @@ int main(void)
 			}
 			else
 			{
-				fprintf(stderr,"Correct syntax is \"unsetenv $var\"\n");
+				fprintf(stderr,"%s: correct syntax is \"unsetenv $var\"\n", SYSTEM_NAME);
 			}
 		}
 		// cd [dir]: change current working directory to dir. If dir is omitted, change to user's HOME directory
@@ -274,7 +279,7 @@ int main(void)
 					free(argv[i]);
 				}
 				free(argv);
-				fprintf(stderr,"Error for running %s\n", command);
+				fprintf(stderr,"%s: no such file or directory %s\n",  SYSTEM_NAME, command);
 				exit(0);
 				
 			}
