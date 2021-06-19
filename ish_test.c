@@ -315,6 +315,7 @@ int main(void)
 						tokens = Token_getInput(tokens,filename,&status);
 						if(status == 0)
 						{
+							printf("open file to read at i = %d\n",i);
 							file_descriptor = open(filename, O_RDONLY);
 							if(file_descriptor < 0){
 								perror("open read");
@@ -335,6 +336,7 @@ int main(void)
 						tokens = Token_getOutput(tokens,filename,&status);
 						if(status == 0)
 						{
+							printf("open file to write at i = %d\n",i);
 							file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 							if(file_descriptor < 0){
 								perror("open write");
