@@ -185,7 +185,9 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 					eState = STATE_IN_STRINGTWO;
 				}
 			    else if (isspace(c))
+				{
 			       eState = STATE_START;
+				}
 			    else if (c == '&' || c == '|' || c == '>' || c == '<')
 				{
 					acValue[iValueIndex++] = c;
@@ -264,6 +266,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 			case STATE_IN_WORD:
 				if ((c == '\n') || (c == '\0'))
 				{
+					printf("part1\n");
 					/* Create a WORD token. */
 					acValue[iValueIndex] = '\0';
 					psToken = makeToken(TOKEN_WORD, acValue);
@@ -291,6 +294,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 				}
 				else if (isspace(c))
 				{
+					printf("part2\n");
 					/* Create a WORD token. */
 					acValue[iValueIndex] = '\0';
 					psToken = makeToken(TOKEN_WORD, acValue);
