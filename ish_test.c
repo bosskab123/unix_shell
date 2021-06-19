@@ -364,8 +364,6 @@ int main(void)
 					/* Make child write to pipe if it's not the last command */
 					if(i!=totalComm-1)
 					{
-						printf("test\n");
-						fflush(NULL);
 						if(dup2(p[2*i+1],1) < 0){
 							perror("dup2");
 							exit(EXIT_FAILURE);
@@ -382,10 +380,10 @@ int main(void)
 					}
 
 					argv = Token_getComm(tokens,i,&number_argv);
-					fflush(NULL);
 					// Create a char array of token instead of using Dynamic array
-					printf("==== %d ====\n",i);
-					for(j=0;j<number_argv;j++) printf("argv[%d]: (%s)\n",j,argv[j]);
+					fprintf(stdout, "==== %d ====\n",i);
+					for(j=0;j<number_argv;j++) fprintf(stdout, "argv[%d]: (%s)\n",j,argv[j]);
+					fflush(NULL);
 					execvp(argv[0],argv);
 					fprintf(stderr, "%s: %s\n", argv[0], strerror(errno));
 					exit(EXIT_FAILURE);
