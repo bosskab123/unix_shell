@@ -461,16 +461,17 @@ DynArray_T Token_isBG(DynArray_T oTokens, int *status)
 	return oTokens;
 }
 
-DynArray_T Token_getInput(DynArray_T oTokens, char *filename)
+DynArray_T Token_getInput(DynArray_T oTokens, char *filename, int *status)
 {
 	assert(oTokens != NULL);
 	
 	int i,length;
+	*status = -1;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
 		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RL){
-			printf("input: %s\n",getTokenValue(DynArray_get(oTokens,i+1)));
 			strcpy(filename,getTokenValue(DynArray_get(oTokens,i+1)));
+			*status = 0;
 			DynArray_removeAt(oTokens,i);
 			return oTokens;
 		}
@@ -478,16 +479,17 @@ DynArray_T Token_getInput(DynArray_T oTokens, char *filename)
 	return oTokens;
 }
 
-DynArray_T Token_getOutput(DynArray_T oTokens, char *filename)
+DynArray_T Token_getOutput(DynArray_T oTokens, char *filename, int *status)
 {
 	assert(oTokens != NULL);
 	
 	int i,length;
+	*status = -1;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
 		if(getTokenType(DynArray_get(oTokens,i)) == TOKEN_RR){
-			printf("output: %s\n",getTokenValue(DynArray_get(oTokens,i+1)));
 			strcpy(filename,getTokenValue(DynArray_get(oTokens,i+1)));
+			*status = 0;
 			DynArray_removeAt(oTokens,i);
 			return oTokens;
 		}

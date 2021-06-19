@@ -311,9 +311,8 @@ int main(void)
 						if(i==0)
 						{
 							filename = (char *)malloc(50 * sizeof(filename));
-							tokens = Token_getInput(tokens,filename);
-							printf("i0 -> file: %s\n",filename);
-							if(filename != NULL)
+							tokens = Token_getInput(tokens,filename,&status);
+							if(status == 0)
 							{
 								file_descriptor = open(filename, O_RDONLY);
 								if(file_descriptor < 0){
@@ -332,9 +331,9 @@ int main(void)
 						if(i==totalComm-1)
 						{
 							filename = (char *)malloc(50 * sizeof(filename));
-							tokens = Token_getOutput(tokens,filename);
+							tokens = Token_getOutput(tokens,filename,&status);
 							printf("in-1 -> file: %s\n",filename);
-							if(filename != NULL)
+							if(status == 0)
 							{
 								file_descriptor = open(filename, O_WRONLY | O_CREAT, 0600);
 								if(file_descriptor < 0){
