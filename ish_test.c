@@ -45,10 +45,8 @@ void SIGINT_handler(int iSig)
 {
 	/* Send SIGINT to children */
 	int childPID_length = DynArray_getLength(childPIDs);
-	printf("length = %d\n",childPID_length);
+	printf("SIGINT alert: length = %d\n",childPID_length);
 	int i;
-	if(childPID_length == 0) return;
-	
 	for(i=0;i<childPID_length;i++){
 		int *cpid = (int *)DynArray_get(childPIDs,i);
 		kill( *cpid, SIGINT );
@@ -155,6 +153,8 @@ int main(void)
 		line = fgets(acLine, MAX_LINE_SIZE, fd); 
 		if(line == NULL) continue;
 		
+		printf("It's back\n");
+
 		if(fd != stdin) fprintf(stdout,"%% %s", acLine);
 		fflush(NULL);
 		
