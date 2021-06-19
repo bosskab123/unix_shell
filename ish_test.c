@@ -266,7 +266,7 @@ int main(void)
 			
 			// Check if it is foreground or background
 			int foreground;
-			tokens = Token_isBG(tokens,foreground);
+			tokens = Token_isBG(tokens,&foreground);
 			
 			// Fork child process to do the command
 			int pid = 1, p[2], i, j;
