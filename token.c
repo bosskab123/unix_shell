@@ -458,19 +458,19 @@ char *Token_getInput(DynArray_T oTokens, int *status)
 	
 	int i,length;
 	char *filename;
+	filename = (char *)malloc(100*sizeof(char));
 	*status = -1;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
 		if(Token_getType(DynArray_get(oTokens,i)) == TOKEN_RL){
 			*status = 0;
-			filename = (char *)malloc(100*sizeof(char));
 			strcpy(filename,Token_getValue(DynArray_get(oTokens,i+1)));
 			DynArray_removeAt(oTokens,i);
 			DynArray_removeAt(oTokens,i);
 			return filename;
 		}
 	}
-	return filename;
+	return NULL;
 }
 
 char *Token_getOutput(DynArray_T oTokens, int *status)
@@ -479,19 +479,19 @@ char *Token_getOutput(DynArray_T oTokens, int *status)
 	
 	int i,length;
 	char *filename;
+	filename = (char *)malloc(100*sizeof(char));
 	*status = -1;
 	length = DynArray_getLength(oTokens);
 	for(i=0;i<length;i++){
 		if(Token_getType(DynArray_get(oTokens,i)) == TOKEN_RR){
 			*status = 0;
-			filename = (char *)malloc(100*sizeof(char));
 			strcpy(filename,Token_getValue(DynArray_get(oTokens,i+1)));
 			DynArray_removeAt(oTokens,i);
 			DynArray_removeAt(oTokens,i);
 			return filename;
 		}
 	}
-	return filename;
+	return NULL;
 }
 
 int Token_getNumCommand(DynArray_T oTokens)
