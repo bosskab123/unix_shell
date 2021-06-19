@@ -539,7 +539,5 @@ void Token_findCommSet(DynArray_T oTokens, char ***commSet, int *totalComm, int 
 		}
 		j++;
 	}
-	printf("curComm = %d \n", curComm);
-	printf("totalSize = %d \n", totalSize);
-	assert(curComm == totalSize);
+	assert(curComm+1 == totalSize);
 }
