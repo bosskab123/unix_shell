@@ -393,6 +393,15 @@ int main(void)
 			
 			if( foreground == 1 )
 			{
+				if(totalComm>1)
+				{
+					for(j=0;j<totalComm-1;j++){
+						close(p[j][0]);
+						close(p[j][1]);
+						free(p[j]);
+					}
+					free(p);
+				}
 				for(i=0;i<totalComm;i++)
 				{
 					pid = wait(&status);
