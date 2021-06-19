@@ -294,7 +294,7 @@ int main(void)
 					if(pid != 0) ChildPID_add(childPIDs, pid);
 					else 
 					{
-						int file_descriptor,j;
+						int file_descriptor;
 						char *filename;
 						
 						/* Redirect stdin if any for the first process*/
@@ -333,7 +333,6 @@ int main(void)
 							}
 						}
 						// Create a char array of token instead of using Dynamic array
-						j=0;
 						argv = commSet[i];
 						execvp(argv[0],argv);
 						fprintf(stderr,"%s: no such file or directory\n",command);
