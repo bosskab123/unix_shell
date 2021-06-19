@@ -122,7 +122,8 @@ int main(void)
 		iBuiltIn: 1 if the command is a built-in command
 		number_token: the number of tokens in the command
 	*/
-	char acLine[MAX_LINE_SIZE], command[MAX_LINE_SIZE], line[MAX_LINE_SIZE];
+	char acLine[MAX_LINE_SIZE], command[MAX_LINE_SIZE];
+	char *line;
 	int status, iSuccessful, iBuiltIn;
 	
 	errMsg = (char *)malloc(50*sizeof(char));
