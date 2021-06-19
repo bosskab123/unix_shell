@@ -417,7 +417,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 							strcpy(errMsg,"Pipe or redirection destination is not specified");
 							return FALSE;
 						}
-						else if(nRR != 0) {
+						else if(nRR != 0 && nRR != nP) {
 							strcpy(errMsg,"Multiple redirection of standard output");
 							return FALSE;
 						}
