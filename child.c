@@ -24,8 +24,15 @@ DynArray_T ChildPID_init(int size)
 	return cp;
 }
 
+int ChildPID_getLength(DynArray_T cp)
+{
+	assert(cp != NULL);
+	return DynArray_getLength(cp);
+}
+
 int ChildPID_get(DynArray_T cp, int index)
 {
+	assert(cp != NULL);
 	int *item;
 	item = DynArray_get(cp,index);
 	return *item;

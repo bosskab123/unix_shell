@@ -240,7 +240,11 @@ int main(void)
 		{
 			printf("Bring background to foreground pls\n");
 
-			waitpid();
+			int lastChild = ChildPID_get(ChildPID_getLength(cp) - 1);
+
+			int pid = waitpid(lastChild);
+			if(pid == -1) perror("waitpid");
+			else ChildPID_delete(childPIDs, pid);
 
 		}
 		else iBuiltIn = 0;

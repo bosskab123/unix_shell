@@ -5,6 +5,10 @@ void ChildPID_terminate_handler(int iSig);
 
 DynArray_T ChildPID_init(int size);
 
+int ChildPID_getLength(DynArray_T cp);
+
+int ChildPID_get(DynArray_T cp, int index);
+
 void ChildPID_add(DynArray_T cp, int pid);
 
 void ChildPID_delete(DynArray_T cp, int pid);
