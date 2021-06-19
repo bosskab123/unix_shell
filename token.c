@@ -223,15 +223,15 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 			    break;
 			
 			case STATE_IN_STRING:
-				if(c != '"')
-				{
-					acValue[iValueIndex++] = c;
-					eState = STATE_IN_STRING;
-				}
-				else if(c == '\n' || c == '\0')
+				if(c == '\n' || c == '\0')
 				{
 					strcpy(errMsg,"Could not find quote pair");
 					return FALSE;
+				}
+				else if(c != '"')
+				{
+					acValue[iValueIndex++] = c;
+					eState = STATE_IN_STRING;
 				}
 				else
 				{
