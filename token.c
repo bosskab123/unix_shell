@@ -435,7 +435,7 @@ int lexLine(const char *pcLine, DynArray_T oTokens, char *errMsg)
 							strcpy(errMsg,"Standard input redirection without file name");
 							return FALSE;
 						}
-						else if(nRL != 0) {
+						else if(nRL != 0 || nP !=0 ) {
 							strcpy(errMsg,"Multiple redirection of standard input");
 							return FALSE;
 						}
