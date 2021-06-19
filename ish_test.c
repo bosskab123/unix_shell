@@ -232,7 +232,7 @@ int main(void)
 		{
 			if(number_token > 2) fprintf(stderr,"%s: cd: too many arguments\n", SYSTEM_NAME);
 			else if(number_token == 2){
-				if(chdir(getTokenValue(DynArray_get(tokens,1))) != 0) perror("chdir");
+				if(chdir(getTokenValue(DynArray_get(tokens,1))) != 0) fprintf(stderr, "%s: %s", SYSTEM_NAME, strerror(errno));
 			}
 			else chdir(getenv("HOME"));
 		}
@@ -293,7 +293,7 @@ int main(void)
 				pipe(p);
 				if(pipe(p) == -1)
 				{
-					perror("p");
+					perror("pipe");
 					exit(EXIT_FAILURE);
 				}
 			}
@@ -317,7 +317,7 @@ int main(void)
 							{
 								file_descriptor = open(filename, O_RDONLY);
 								if(file_descriptor < 0){
-									perror("open");
+									perror("open read");
 									exit(EXIT_FAILURE);
 								}
 
@@ -335,7 +335,7 @@ int main(void)
 							{
 								file_descriptor = open(filename, O_WRONLY | O_CREAT, 0600);
 								if(file_descriptor < 0){
-									perror("open");
+									perror("open write");
 									exit(EXIT_FAILURE);
 								}
 
@@ -349,7 +349,7 @@ int main(void)
 
 						// Create a char array of token instead of using Dynamic array
 						execvp(argv[0],argv);
-						fprintf(stderr,"%s: no such file or directory\n",command);
+						fprintf(stderr, "%s: %s", argv[0], strerror(errno));
 						for(j=0;j<number_argv+1;j++){
 							free(argv[j]);
 						}
