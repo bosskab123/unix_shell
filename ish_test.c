@@ -334,7 +334,7 @@ int main(void)
 							tokens = Token_getOutput(tokens,filename,&status);
 							if(status == 0)
 							{
-								file_descriptor = open(filename, O_WRONLY | O_CREAT, 0600);
+								file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 								if(file_descriptor < 0){
 									perror("open write");
 									exit(EXIT_FAILURE);
