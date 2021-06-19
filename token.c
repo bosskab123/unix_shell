@@ -511,14 +511,14 @@ char **Token_getComm(DynArray_T oTokens, int index, int *size)
 		if( getTokenType(DynArray_get(oTokens,0)) == TOKEN_RL || getTokenType(DynArray_get(oTokens,0)) == TOKEN_RR){
 			i=2; j=2;
 		}
-		while(j<length && strcmp(getTokenValue(DynArray_get(oTokens,j)),"|") != 0){
+		while(j<length && getTokenType(DynArray_get(oTokens,j)) != TOKEN_P){
 			j++;
 		}
 	}
 	else{
 
 		while( curPos<index && i<length ){
-			if(strcmp(getTokenValue(DynArray_get(oTokens,i)),"|") == 0) curPos++;
+			if( getTokenType(DynArray_get(oTokens,i)) == TOKEN_P) curPos++;
 			i++;
 		}
 		j=i;
