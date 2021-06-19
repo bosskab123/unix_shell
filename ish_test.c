@@ -300,48 +300,48 @@ int main(void)
 				if(pid > 0) ChildPID_add(childPIDs, pid);
 				else if(pid == 0)
 				{
-					int file_descriptor;
-					char *filename;
-					/* Redirect a file descriptor as stdin, if any, for the first process*/
-					if(i==0)
-					{
-						/* Open file from redirection, if any */
-						filename = (char *)malloc(50 * sizeof(filename));
-						tokens = Token_getInput(tokens,filename,&status);
-						if(status == 0)
-						{
-							file_descriptor = open(filename, O_RDONLY);
-							if(file_descriptor < 0){
-								perror("open read");
-								exit(EXIT_FAILURE);
-							}
+					// int file_descriptor;
+					// char *filename;
+					// /* Redirect a file descriptor as stdin, if any, for the first process*/
+					// if(i==0)
+					// {
+					// 	/* Open file from redirection, if any */
+					// 	filename = (char *)malloc(50 * sizeof(filename));
+					// 	tokens = Token_getInput(tokens,filename,&status);
+					// 	if(status == 0)
+					// 	{
+					// 		file_descriptor = open(filename, O_RDONLY);
+					// 		if(file_descriptor < 0){
+					// 			perror("open read");
+					// 			exit(EXIT_FAILURE);
+					// 		}
 
-							close(0);
-							dup(file_descriptor);
-							close(file_descriptor);
-						}
-						free(filename);
-					}
+					// 		close(0);
+					// 		dup(file_descriptor);
+					// 		close(file_descriptor);
+					// 	}
+					// 	free(filename);
+					// }
 
-					/* Redirect stdout if any */
-					if(i == totalComm-1)
-					{
-						filename = (char *)malloc(50 * sizeof(filename));
-						tokens = Token_getOutput(tokens,filename,&status);
-						if(status == 0)
-						{
-							file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-							if(file_descriptor < 0){
-								perror("open write");
-								exit(EXIT_FAILURE);
-							}
+					// /* Redirect stdout if any */
+					// if(i == totalComm-1)
+					// {
+					// 	filename = (char *)malloc(50 * sizeof(filename));
+					// 	tokens = Token_getOutput(tokens,filename,&status);
+					// 	if(status == 0)
+					// 	{
+					// 		file_descriptor = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+					// 		if(file_descriptor < 0){
+					// 			perror("open write");
+					// 			exit(EXIT_FAILURE);
+					// 		}
 
-							close(1);
-							dup(file_descriptor);
-							close(file_descriptor);
-						}
-						free(filename);
-					}
+					// 		close(1);
+					// 		dup(file_descriptor);
+					// 		close(file_descriptor);
+					// 	}
+					// 	free(filename);
+					// }
 
 					/* Make child read from pipe if it's not the first command */
 					if(i!=0)
